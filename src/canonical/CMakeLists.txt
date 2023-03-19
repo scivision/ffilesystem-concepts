@@ -33,6 +33,8 @@ target_compile_definitions(canonical_c PRIVATE $<$<BOOL:${MSVC}>:_CRT_SECURE_NO_
 add_executable(main_c main.c)
 target_link_libraries(main_c PRIVATE canonical_c)
 
+add_test(NAME canonical_notfound_c COMMAND main_c "not-exist-file")
+
 add_test(NAME canonical_link_c
 COMMAND ${CMAKE_COMMAND}
   -Dexe:FILEPATH=$<TARGET_FILE:main_c>
@@ -59,6 +61,8 @@ add_executable(canonical_cpp canonical.cpp
 $<$<BOOL:${MINGW}>:windows_read_symlink.cpp>
 )
 target_include_directories(canonical_cpp PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+
+add_test(NAME canonical_notfound_cpp COMMAND canonical_cpp "not-exist-file")
 
 add_test(NAME canonical_link_cpp
 COMMAND ${CMAKE_COMMAND}
@@ -90,5 +94,6 @@ file(REMOVE ${Uname})
 endif()
 
 set_property(TEST canonical_case_c canonical_case_cpp PROPERTY DISABLED ${case_sensitive})
+set_property(TEST canonical_notfound_c canonical_notfound_cpp PROPERTY WILL_FAIL true)
 
 file(GENERATE OUTPUT .gitignore CONTENT "*")

@@ -8,11 +8,29 @@
 #include <stdlib.h>
 #include <errno.h>
 
+#ifndef _MSC_VER
+#include <unistd.h>
+#endif
+
 #include "canonical.h"
 
 
 size_t fs_realpath(const char* path, char* r, size_t buffer_size)
 {
+
+#ifdef _MSC_VER
+  if (_access_s(path, 0) != 0){
+    fprintf(stderr, "ERROR: path does not exist: %s\n", path);
+    return 0;
+  }
+#else
+  // <unistd.h>
+  if (access(path, F_OK) != 0){
+    fprintf(stderr, "ERROR: path does not exist: %s\n", path);
+    return 0;
+  };
+#endif
+
   char* t;
 #ifdef _WIN32
   t = _fullpath(r, path, buffer_size);
