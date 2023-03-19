@@ -17,10 +17,20 @@ OUTPUT_VARIABLE out OUTPUT_STRIP_TRAILING_WHITESPACE
 
 file(REMOVE ${Lname})
 
-cmake_path(COMPARE "${Lname}" EQUAL "${out}" ok)
+# We have to have CMake resolve the name on the filesystem too to have the
+# the same case as the filesystem.
+if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.27)
+  # long-standing bug
+  # https://gitlab.kitware.com/cmake/cmake/-/merge_requests/8348
+  file(REAL_PATH "${Lname}" resolved)
+else()
+  get_filename_component(resolved "${Lname}" REALPATH)
+endif()
+
+cmake_path(COMPARE "${resolved}" EQUAL "${out}" ok)
 
 if(ok)
-  message(STATUS "OK: canonical(${Uname}) resolves to ${out}")
+  message(STATUS "OK: canonical(${resolved}) resolves to ${out}")
 else()
-  message(FATAL_ERROR "canonical(${Uname}) does not resolve to ${out}")
+  message(FATAL_ERROR "canonical(${resolved}) does not resolve to ${out}")
 endif()
