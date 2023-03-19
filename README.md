@@ -3,6 +3,11 @@
 A testbed for the
 [Ffilesystem library](https://github.com/scivision/fortran-filesystem),
 to test across platforms without breaking the widely-used library.
+As in Ffilesystem, we use some optional C++20 features.
+The main focus is on the C++17
+[filesystem](https://en.cppreference.com/w/cpp/filesystem)
+standard library.
+We also demonstrate techniques in C to reproduce some C++ filesystem functionality at lower fidelity--otherwise, we'd be reinventing the wheel.
 
 ## Canonical
 

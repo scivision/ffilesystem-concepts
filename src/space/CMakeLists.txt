@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.20)
 project(spaced LANGUAGES C CXX)
 enable_testing()
 
+set_property(DIRECTORY PROPERTY LABELS "disk_space")
+
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(demo_space demo_space.cpp)

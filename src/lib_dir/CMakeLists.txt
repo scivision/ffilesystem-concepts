@@ -6,6 +6,8 @@ cmake_minimum_required(VERSION 3.20)
 project(concept_libdir LANGUAGES C)
 enable_testing()
 
+set_property(DIRECTORY PROPERTY LABELS "lib_dir")
+
 option(fortran "Build Fortran example" ON)
 
 if(fortran)

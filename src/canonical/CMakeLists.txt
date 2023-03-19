@@ -7,6 +7,8 @@ if(PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR)
   message(FATAL_ERROR "In-source builds are not allowed.")
 endif()
 
+set_property(DIRECTORY PROPERTY LABELS "canonical")
+
 include(CheckCXXSymbolExists)
 
 option(fortran "Enable Fortran" ON)
