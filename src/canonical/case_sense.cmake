@@ -19,13 +19,8 @@ file(REMOVE ${Lname})
 
 # We have to have CMake resolve the name on the filesystem too to have the
 # the same case as the filesystem.
-if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.27)
-  # long-standing bug
-  # https://gitlab.kitware.com/cmake/cmake/-/merge_requests/8348
-  file(REAL_PATH "${Lname}" resolved)
-else()
-  get_filename_component(resolved "${Lname}" REALPATH)
-endif()
+cmake_path(GET Lname FILENAME resolved)
+string(PREPEND resolved ${CMAKE_CURRENT_LIST_DIR}/)
 
 cmake_path(COMPARE "${resolved}" EQUAL "${out}" ok)
 
