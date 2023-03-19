@@ -6,6 +6,8 @@
 std::string fs_win32_read_symlink(std::string);
 #endif
 
+std::string fs_realpath(std::string);
+
 extern "C" {
 #endif
 

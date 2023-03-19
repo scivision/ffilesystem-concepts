@@ -10,7 +10,7 @@
 #define TRACE 1
 #endif
 
-int msvc_call(const char* path){
+int create_process(const char* path){
 
   char* p = (char*) malloc(strlen(path) + 1);
   strcpy(p, path);
@@ -60,24 +60,4 @@ if(TRACE) printf("TRACE: waiting to complete %s\n", cmd);
 if(TRACE) printf("TRACE: completed %s\n", cmd);
 
   return EXIT_SUCCESS;
-}
-
-int main(void){
-
-  char* buf;
-  const size_t Lb=2048;
-  size_t L;
-
-  buf = (char*) malloc(Lb);
-
-  if(getenv_s(&L, buf, Lb, "USERPROFILE") != 0){
-    fprintf(stderr, "ERROR: getenv_s failed\n");
-    return EXIT_FAILURE;
-  }
-
-  int s = msvc_call(buf);
-
-  free(buf);
-
-  return s;
 }

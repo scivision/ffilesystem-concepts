@@ -1,17 +1,11 @@
-cmake_minimum_required(VERSION 3.20)
-
-project(concept_exedir LANGUAGES C)
-
 set_property(DIRECTORY PROPERTY LABELS "syscall")
 
-
-add_executable(exec exec.c)
+add_library(exec exec.c)
+target_include_directories(exec INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_definitions(exec PRIVATE $<$<BOOL:${MSVC}>:_CRT_SECURE_NO_WARNINGS>)
 
 if(WIN32)
-  add_executable(CreateProcess CreateProcess.c)
-  target_compile_definitions(CreateProcess PRIVATE $<$<BOOL:${MSVC}>:_CRT_SECURE_NO_WARNINGS>)
+  add_library(create_process CreateProcess.c)
+  target_include_directories(create_process PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+  target_compile_definitions(create_process PRIVATE $<$<BOOL:${MSVC}>:_CRT_SECURE_NO_WARNINGS>)
 endif()
-
-
-file(GENERATE OUTPUT .gitignore CONTENT "*")

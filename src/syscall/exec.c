@@ -12,9 +12,9 @@
 
 #include <stdio.h>
 
-int main(void)
+int execute_process(const char* cmd)
 {
-int r;
+  int r;
 #ifdef _WIN32
   // don't directly specify "cmd.exe" in exec() for security reasons
   char* comspec = getenv("COMSPEC");
@@ -22,10 +22,10 @@ int r;
     fprintf(stderr, "ERROR: environment variable COMSPEC not defined\n");
     return EXIT_FAILURE;
   }
-  intptr_t ir = _execl(comspec, "cmd", "/c", "whoami",  NULL);
+  intptr_t ir = _execl(comspec, "cmd", "/c", cmd,  NULL);
   r = (int)ir;
 #else
-  r = execlp("whoami", "whoami", NULL);
+  r = execlp(cmd, cmd, NULL);
 #endif
 
   if(r != -1)

@@ -1,7 +1,3 @@
-cmake_minimum_required(VERSION 3.20)
-project(IterDir LANGUAGES CXX)
-enable_testing()
-
 set_property(DIRECTORY PROPERTY LABELS "iterdir")
 
 find_package(Python COMPONENTS Interpreter)
@@ -15,5 +11,3 @@ if(Python_Interpreter_FOUND)
   )
   set_property(TEST IterDirPython PROPERTY LABELS "python")
 endif()
-
-file(GENERATE OUTPUT .gitignore CONTENT "*")

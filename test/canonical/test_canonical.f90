@@ -15,7 +15,7 @@ character(kind=C_CHAR), intent(out) :: rpath(*)
 end function
 end interface
 
-character(:), allocatable :: exe_dir, resolved
+character(:), allocatable :: resolved
 character(4096, kind=C_CHAR) :: buf
 
 integer :: L, ierr
