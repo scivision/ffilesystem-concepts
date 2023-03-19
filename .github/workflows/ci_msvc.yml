@@ -1,0 +1,37 @@
+name: ci_msvc
+
+env:
+  CTEST_NO_TESTS_ACTION: error
+
+on:
+  push:
+    paths:
+      - "**.c"
+      - "**.cpp"
+      - "**/CMakeLists.txt"
+      - "**.cmake"
+      - ".github/workflows/ci_msvc.yml"
+
+jobs:
+
+  msvc:
+    runs-on: windows-latest
+    timeout-minutes: 10
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: config cpp=${{ matrix.cpp }}
+      run: cmake -Bbuild -Dfortran:BOOL=off
+
+    - name: Debug build
+      run: cmake --build build --config Debug
+
+    - name: Debug test
+      run: ctest --test-dir build -C Debug -V
+
+    - name: Release build
+      run: cmake --build build --config Release
+
+    - name: Release test
+      run: ctest --test-dir build -C Release -V
