@@ -6,6 +6,29 @@
 
 namespace fs = std::filesystem;
 
+std::string fs_realpath(std::string path)
+{
+  fs::path in(path);
+
+  if(!fs::exists(in)) {
+    std::cerr << "Error: " << in << " does not exist\n";
+    return {};
+  }
+
+  fs::path out = fs::canonical(in);
+#ifdef __MINGW32__
+  std::string r = fs_win32_read_symlink(out.string());
+  if (r.empty()) {
+    std::cerr << "Error: " << out.string() << " failed win32_read_symlink\n";
+    return {};
+  }
+
+  out = fs::path(r);
+#endif
+
+  return out.generic_string();
+}
+
 
 int main(int argc, char* argv[])
 {
@@ -14,25 +37,15 @@ int main(int argc, char* argv[])
     return EXIT_FAILURE;
   }
 
-  fs::path in(argv[1]);
+  std::string in(argv[1]);
 
-  if(!fs::exists(in)) {
-    std::cerr << "Error: " << in << " does not exist\n";
+  std::string out = fs_realpath(in);
+  if (out.empty()) {
+    std::cerr << "Error: " << in << " failed fs_realpath\n";
     return EXIT_FAILURE;
   }
 
-  fs::path out = fs::canonical(in);
-#ifdef __MINGW32__
-  std::string r = fs_win32_read_symlink(out.string());
-  if (r.empty()) {
-    std::cerr << "Error: " << out.string() << " failed win32_read_symlink\n";
-    return EXIT_FAILURE;
-  }
-
-  out = fs::path(r);
-#endif
-
-  std::cout << out.generic_string() << '\n';
+  std::cout << out << '\n';
 
   return EXIT_SUCCESS;
 
