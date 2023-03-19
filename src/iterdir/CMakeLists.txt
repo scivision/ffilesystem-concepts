@@ -13,6 +13,7 @@ if(Python_Interpreter_FOUND)
   add_test(NAME IterDirPython
   COMMAND Python::Interpreter ${CMAKE_CURRENT_SOURCE_DIR}/iterdir.py "${CMAKE_SOURCE_DIR}"
   )
+  set_property(TEST IterDirPython PROPERTY LABELS "python")
 endif()
 
 file(GENERATE OUTPUT .gitignore CONTENT "*")

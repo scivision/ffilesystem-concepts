@@ -31,6 +31,9 @@ if(L < 2) error stop "ERROR: get_command_argument(0) returned L < 2: " // trim(b
 resolved = canonical(buf)
 print '(A)', "canonical(argv[0]) = " // trim(resolved)
 
+deallocate(resolved)
+!! for valgrind
+
 contains
 
 function canonical(path)

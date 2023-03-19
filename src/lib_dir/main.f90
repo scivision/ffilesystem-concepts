@@ -17,7 +17,7 @@ end interface
 character(:), allocatable :: libpath
 character(4096, kind=c_char) :: buf
 
-integer :: L
+integer(C_SIZE_T) :: L
 
 L = get_libpath(buf)
 
@@ -25,6 +25,9 @@ allocate(character(len=L) :: libpath)
 libpath = buf(:L)
 
 print *, libpath
+
+deallocate(libpath)
+!! valgrind
 
 
 end program

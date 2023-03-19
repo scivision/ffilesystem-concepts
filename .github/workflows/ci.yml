@@ -82,7 +82,7 @@ jobs:
 
     - uses: actions/checkout@v3
 
-    - run: ctest -S memcheck.cmake -V
+    - run: ctest -S memcheck.cmake -V -LE python
 
 
   mac:
