@@ -9,11 +9,11 @@ string(TOLOWER ${actual_name} Lname)
 # which in general is not the case on Windows and macOS:
 # * Windows upper case drive letter
 # * macOS /Users/... some upper case letters
-message(STATUS "touch file ${Lname}")
-file(TOUCH ${Lname})
 
 if(EXISTS ${actual_name})
   set(case_sensitive false CACHE BOOL "case insensitive build filesystem")
+  message(STATUS "touch file ${Lname}")
+  file(TOUCH ${Lname})
 else()
   set(case_sensitive true CACHE BOOL "case sensitive build filesystem")
 endif()
