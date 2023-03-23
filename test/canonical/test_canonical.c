@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 
 #include "canonical.h"
@@ -8,14 +9,17 @@
 
 int main(int argc, char* argv[]){
 
-  char out[MAXP];
+  char in[MAXP], out[MAXP];
 
   if(argc != 2){
     fprintf(stderr, "Usage: %s <path>\n", argv[0]);
     return EXIT_FAILURE;
   }
 
-  if(!fs_realpath(argv[1], out, MAXP)){
+  strcpy(in, argv[1]);
+
+  if(!fs_realpath(in, out, MAXP)){
+    fprintf(stderr, "test_canonical_c: failed to canonicalize path: %s\n", in);
     return EXIT_FAILURE;
   }
 

@@ -16,12 +16,11 @@ int main(int argc, char* argv[])
 
   std::string out = fs_realpath(in);
   if (out.empty()) {
-    std::cerr << "Error: " << in << " failed test_link\n";
+    std::cerr << "test_canonical_cpp: failed to canonicalize path " << in << "\n";
     return EXIT_FAILURE;
   }
 
   std::cout << out << '\n';
 
   return EXIT_SUCCESS;
-
 }

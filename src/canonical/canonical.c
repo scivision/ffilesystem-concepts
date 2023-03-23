@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <errno.h>
 
 #ifndef _MSC_VER
@@ -17,31 +18,27 @@
 
 size_t fs_realpath(const char* path, char* r, size_t buffer_size)
 {
-
+  bool exists;
 #ifdef _MSC_VER
-  if (_access_s(path, 0) != 0){
-    fprintf(stderr, "ERROR: path does not exist: %s\n", path);
-    return 0;
-  }
+  exists = _access_s(path, 0) == 0;
 #else
   // <unistd.h>
-  if (access(path, F_OK) != 0){
-    fprintf(stderr, "ERROR: path does not exist: %s\n", path);
-    return 0;
-  };
+  exists = access(path, F_OK) == 0;
 #endif
+  if(!exists)
+    fprintf(stderr, "realpath: %s does not exist\n", path);
 
   char* t;
 #ifdef _WIN32
   t = _fullpath(r, path, buffer_size);
-  if(t)
+  if(exists & t != NULL)
     fs_win32_read_symlink(t, r, buffer_size);
 #else
   t = realpath(path, r);
 #endif
 
-  if(!t){
-    printf("Error: realpath: %s\n", strerror(errno));
+  if(exists && !t){
+    fprintf(stderr, "ERROR: realpath: %s\n", strerror(errno));
     return 0;
   }
 

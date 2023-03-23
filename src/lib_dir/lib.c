@@ -21,7 +21,7 @@ size_t get_libpath(char* path)
 #ifdef _WIN32
   if (GetModuleFileName(GetModuleHandle(MY_DLL_NAME), path, MAX_PATH) !=0)
     return strlen(path);
-#else
+#elif defined(HAVE_DLADDR)
  Dl_info info;
 
  if (dladdr(get_libpath, &info))
@@ -29,9 +29,8 @@ size_t get_libpath(char* path)
    strcpy(path, info.dli_fname);
    return strlen(path);
  }
-#endif
-
+#else
   return 0;
   // always have a return
-
+#endif
 }

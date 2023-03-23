@@ -43,7 +43,6 @@ endif()
 # --- test properties
 
 set_property(TEST CaseInsensitiveC CaseInsensitiveCPP PROPERTY DISABLED ${case_sensitive})
-set_property(TEST CanonicalNotFoundC CanonicalNotFoundCPP PROPERTY WILL_FAIL true)
 set_property(TEST ResolveLinkC ResolveLinkCPP PROPERTY PASS_REGULAR_EXPRESSION "CMakeLists.txt\n$")
 
 if(WIN32 AND BUILD_SHARED_LIBS)
