@@ -7,7 +7,7 @@ include(CheckSymbolExists)
 include(GNUInstallDirs)
 
 
-if(NOT WIN32)
+if(NOT (WIN32 OR CYGWIN))
   set(CMAKE_REQUIRED_LIBRARIES ${CMAKE_DL_LIBS})
   if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(CMAKE_REQUIRED_DEFINITIONS -D_GNU_SOURCE)
@@ -19,7 +19,7 @@ if(NOT WIN32)
 endif()
 
 add_library(get_lib SHARED lib.c)
-if(WIN32)
+if(WIN32 OR CYGWIN)
   target_compile_definitions(get_lib PRIVATE MY_DLL_NAME="$<TARGET_FILE_NAME:get_lib>")
 else()
   target_link_libraries(get_lib PRIVATE ${CMAKE_DL_LIBS})
