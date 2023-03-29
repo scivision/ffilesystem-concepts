@@ -7,6 +7,7 @@ target_link_libraries(test_canonical_c PRIVATE canonical_c)
 target_compile_definitions(test_canonical_c PRIVATE $<$<BOOL:${MSVC}>:_CRT_SECURE_NO_WARNINGS>)
 
 add_test(NAME CanonicalNotFoundC COMMAND test_canonical_c "not-exist-file")
+set_property(TEST CanonicalNotFoundC PROPERTY DISABLED $<BOOL:${CYGWIN}>)
 
 file(CREATE_LINK ${CMAKE_CURRENT_LIST_FILE} ${CMAKE_CURRENT_BINARY_DIR}/test.lnk SYMBOLIC)
 add_test(NAME ResolveLinkC
