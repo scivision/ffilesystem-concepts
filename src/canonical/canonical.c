@@ -9,7 +9,9 @@
 #include <stdbool.h>
 #include <errno.h>
 
-#ifndef _MSC_VER
+#ifdef _MSC_VER
+#include <io.h>
+#else
 #include <unistd.h>
 #endif
 
@@ -31,7 +33,7 @@ size_t fs_realpath(const char* path, char* r, size_t buffer_size)
   char* t;
 #ifdef _WIN32
   t = _fullpath(r, path, buffer_size);
-  if(exists & t != NULL)
+  if(exists & (t != NULL))
     fs_win32_read_symlink(t, r, buffer_size);
 #else
   t = realpath(path, r);

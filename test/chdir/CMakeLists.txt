@@ -1,6 +1,7 @@
 set_property(DIRECTORY PROPERTY LABELS "chdir")
 
 add_executable(chdir_c chdir.c)
+target_compile_definitions(chdir_c PRIVATE $<$<BOOL:${MSVC}>:_CRT_SECURE_NO_WARNINGS>)
 add_test(NAME chdir_c COMMAND chdir_c ${CMAKE_CURRENT_SOURCE_DIR})
 # avoid dealing with Windows path separators regex
 

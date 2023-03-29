@@ -4,6 +4,7 @@ set_property(DIRECTORY PROPERTY LABELS "canonical")
 
 add_executable(test_canonical_c test_canonical.c)
 target_link_libraries(test_canonical_c PRIVATE canonical_c)
+target_compile_definitions(test_canonical_c PRIVATE $<$<BOOL:${MSVC}>:_CRT_SECURE_NO_WARNINGS>)
 
 add_test(NAME CanonicalNotFoundC COMMAND test_canonical_c "not-exist-file")
 

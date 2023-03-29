@@ -5,6 +5,7 @@
 
 #ifdef _MSC_VER
 #include <crtdbg.h>
+#include <direct.h>
 #else
 #include <unistd.h>
 #endif
@@ -14,9 +15,24 @@
 
 void get_cwd(char* cwd){
 
+#ifdef _MSC_VER
+  if(_getcwd(cwd, MAXP)) return;
+#else
   if(getcwd(cwd, MAXP)) return;
-
+#endif
   fprintf(stderr, "ERROR: getcwd: %s\n", strerror(errno));
+  exit(EXIT_FAILURE);
+}
+
+void change_dir(const char* path){
+
+#ifdef _MSC_VER
+  if(_chdir(path) == 0) return;
+#else
+  if(chdir(path) == 0) return;
+#endif
+
+  fprintf(stderr, "ERROR: chdir: %s\n", strerror(errno));
   exit(EXIT_FAILURE);
 }
 
@@ -41,10 +57,7 @@ int main(int argc, char* argv[]){
   get_cwd(cwd);
   printf("Current path: %s \n", cwd);
 
-  if(chdir(argv[1]) != 0){
-    fprintf(stderr, "ERROR: chdir: %s\n", strerror(errno));
-    return EXIT_FAILURE;
-  }
+  change_dir(argv[1]);
 
   get_cwd(cwd);
   printf("New current path: %s \n", cwd);
