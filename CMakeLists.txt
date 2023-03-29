@@ -4,6 +4,8 @@ project(FilesystemConcepts LANGUAGES C CXX)
 enable_testing()
 
 option(fortran "use Fortran" ON)
+include(CheckLanguage)
+check_language(Fortran)
 if(fortran)
   enable_language(Fortran)
 endif()
@@ -22,6 +24,7 @@ foreach(d IN ITEMS canonical file_types lib_dir syscall)
   add_subdirectory(test/${d})
 endforeach()
 
+add_subdirectory(test/chdir)
 add_subdirectory(test/iterdir)
 add_subdirectory(test/space_avail)
 
