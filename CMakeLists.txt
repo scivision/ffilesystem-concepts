@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.22...3.27)
 
 project(FilesystemConcepts LANGUAGES C CXX)
 enable_testing()
@@ -11,7 +11,11 @@ if(fortran)
 endif()
 
 set(CMAKE_CXX_STANDARD 20)
+
+if(NOT CMAKE_Fortran_COMPILER_ID STREQUAL "NVHPC")
+# bug in CMake for NVHPC "-Werror all-warnings" not valid flag
 set(CMAKE_COMPILE_WARNING_AS_ERROR ON)
+endif()
 
 include(cmake/compilers.cmake)
 include(options.cmake)
