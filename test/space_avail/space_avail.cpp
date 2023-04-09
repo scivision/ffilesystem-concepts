@@ -15,7 +15,7 @@ uintmax_t space_avail(const char* path)
 
   auto si = fs::space(path, ec);
   if(ec){
-    std::cerr << "ERROR:ffilesystem:space_avail " << ec.message() << std::endl;
+    std::cerr << "ERROR:ffilesystem:space_avail " << ec.message() << "\n";
     return 0;
   }
 
@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
 
     auto favail_GB = float(space_avail(argv[1])) / 1073741824;
 
-    std::cout << "space_avail (GB): " << argv[1] << " " << favail_GB << std::endl;
+    std::cout << "space_avail (GB): " << argv[1] << " " << favail_GB << "\n";
 
     return EXIT_SUCCESS;
 }

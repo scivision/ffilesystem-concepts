@@ -3,10 +3,10 @@
 #include <string>
 
 #ifdef _WIN32
-std::string fs_win32_read_symlink(std::string);
+std::string fs_win32_read_symlink(const std::string);
 #endif
 
-std::string fs_realpath(std::string);
+std::string fs_realpath(const std::string);
 
 extern "C" {
 #endif

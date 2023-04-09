@@ -24,3 +24,8 @@ This can be useful when a data file is known to exist relative to an executable.
 This is relevant to say CMake installed project that has an executable and associated data files installed.
 Assuming the user knows the path to the MAIN executable in the installed directory, the program can determine its own full path and
 then a priori know the relative path to the data file(s).
+
+## Symlinks
+
+Symbolic links are demonstrated across platforms, including Linux, macOS, Windows, MinGW, WSL, and Cygwin.
+Windows symlinks may require setting group policy (Windows Pro) or enabling Windows Developer Mode (non-Pro Windows).

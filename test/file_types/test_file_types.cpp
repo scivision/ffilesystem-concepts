@@ -38,7 +38,7 @@ int main()
 
     auto tempdir = fs::temp_directory_path() / "sandbox";
 
-    std::cout << "Working directory: " << tempdir << std::endl;
+    std::cout << "Working directory: " << tempdir << "\n";
 
     // create files of different kinds
     if (fs::exists(tempdir))

@@ -19,26 +19,23 @@ bool is_reserved(const char* path)
 // https://learn.microsoft.com/en-gb/windows/win32/fileio/naming-a-file#naming-conventions
 {
 
-#ifdef _WIN32
+#ifndef _WIN32
+  return false;
+#endif
 
-    std::set<std::string> reserved {
-      "CON", "PRN", "AUX", "NUL",
-      "COM0", "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
-      "LPT0", "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"};
+  std::set<std::string> reserved {
+    "CON", "PRN", "AUX", "NUL",
+    "COM0", "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
+    "LPT0", "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"};
 
-    auto s = std::string(path);
-    std::transform(s.begin(), s.end(), s.begin(), ::toupper);
+  auto s = std::string(path);
+  std::transform(s.begin(), s.end(), s.begin(), ::toupper);
 
 #if __cplusplus >= 202002L
-    return reserved.contains(s);
+  return reserved.contains(s);
 #else
-    return reserved.find(s) != reserved.end();
+  return reserved.find(s) != reserved.end();
 #endif
-
-#else
-    return false;
-#endif
-
 }
 
 void print_file_status(const char* path)

@@ -14,7 +14,9 @@ target_compile_definitions(canonical_c PRIVATE $<$<BOOL:${MSVC}>:_CRT_SECURE_NO_
 
 # --- C++
 
-add_library(canonical_cpp canonical.cpp
-$<$<BOOL:${MINGW}>:windows_read_symlink.cpp>
-)
+add_library(windows_symlink OBJECT windows_read_symlink.cpp)
+target_include_directories(windows_symlink INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+
+add_library(canonical_cpp canonical.cpp)
 target_include_directories(canonical_cpp INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(canonical_cpp PRIVATE windows_symlink)

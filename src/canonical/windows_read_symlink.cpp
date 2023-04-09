@@ -1,10 +1,12 @@
+#ifdef __MINGW32__
+
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <string>
-#include <iostream>
+#include <stdexcept>
 
 
-std::string fs_win32_read_symlink(std::string path)
+std::string fs_win32_read_symlink(const std::string path)
 {
   // this resolves Windows symbolic links (reparse points and junctions)
   // it also resolves the case insensitivity of Windows paths to the disk case
@@ -14,31 +16,21 @@ std::string fs_win32_read_symlink(std::string path)
   // https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfinalpathnamebyhandlea
 
   HANDLE h = CreateFileA(path.c_str(), 0, 0, NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, NULL);
-  if(h == INVALID_HANDLE_VALUE){
-    std::cerr << "ERROR:win32_read_symlink:CreateFile open " << path << "\n";
-    return {};
-  }
+  if(h == INVALID_HANDLE_VALUE)
+    throw std::runtime_error("ERROR:win32_read_symlink:CreateFile open " + path);
 
   CHAR buf[MAX_PATH];
 
   DWORD L = GetFinalPathNameByHandleA(h, buf, MAX_PATH, FILE_NAME_NORMALIZED);
   CloseHandle(h);
-  if (L == ERROR_PATH_NOT_FOUND) {
-    std::cerr << "ERROR:win32_read_symlink:GetFinalPathNameByHandle: path not found " << path << "\n";
-    return {};
-  }
-  else if (L == ERROR_NOT_ENOUGH_MEMORY) {
-    std::cerr << "ERROR:win32_read_symlink:GetFinalPathNameByHandle: buffer too small " << path << "\n";
-    return {};
-  }
-  else if (L == ERROR_INVALID_PARAMETER) {
-    std::cerr << "ERROR:win32_read_symlink:GetFinalPathNameByHandle: invalid parameter " << path << "\n";
-    return {};
-  }
-  else if (L == 0) {
-    std::cerr << "ERROR:win32_read_symlink:GetFinalPathNameByHandle: unknown error " << path << "\n";
-    return {};
-  }
+  if (L == ERROR_PATH_NOT_FOUND)
+    throw std::runtime_error("ERROR:win32_read_symlink:GetFinalPathNameByHandle: path not found " + path);
+  if (L == ERROR_NOT_ENOUGH_MEMORY)
+    throw std::runtime_error("ERROR:win32_read_symlink:GetFinalPathNameByHandle: buffer too small " + path);
+  if (L == ERROR_INVALID_PARAMETER)
+    throw std::runtime_error("ERROR:win32_read_symlink:GetFinalPathNameByHandle: invalid parameter " + path);
+  if (L == 0)
+    throw std::runtime_error("ERROR:win32_read_symlink:GetFinalPathNameByHandle: unknown error " + path);
 
   std::string r(buf);
 #ifdef __cpp_lib_starts_ends_with
@@ -50,3 +42,5 @@ std::string fs_win32_read_symlink(std::string path)
 
   return r;
 }
+
+#endif

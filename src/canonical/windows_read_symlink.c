@@ -23,7 +23,7 @@ size_t fs_win32_read_symlink(const char* path, char* r, size_t buffer_size)
     fprintf(stderr, "ERROR:win32_read_symlink: %s failed GetFinalPathNameByHandle\n", path);
     return 0;
   }
-  else if (L >= MAX_PATH){
+  if (L >= MAX_PATH){
     fprintf(stderr, "ERROR:win32_read_symlink: %s failed GetFinalPathNameByHandle: buffer too small\n", path);
     return 0;
   }
