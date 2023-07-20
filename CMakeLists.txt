@@ -24,11 +24,13 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
 
+# test + library
 foreach(d IN ITEMS canonical file_types lib_dir symlink syscall)
   add_subdirectory(src/${d})
   add_subdirectory(test/${d})
 endforeach()
 
+# standalone tests
 foreach(d IN ITEMS chdir iterdir space_avail)
   add_subdirectory(test/${d})
 endforeach()

@@ -44,6 +44,9 @@ endif()
 
 # --- test properties
 
+set_property(TEST CaseInsensitiveC ResolveLinkC PROPERTY LABELS "C")
+set_property(TEST CaseInsensitiveCPP ResolveLinkCPP PROPERTY LABELS "Cpp")
+
 set_property(TEST CaseInsensitiveC CaseInsensitiveCPP PROPERTY DISABLED ${case_sensitive})
 set_property(TEST ResolveLinkC ResolveLinkCPP PROPERTY PASS_REGULAR_EXPRESSION "CMakeLists.txt\n$")
 

@@ -7,4 +7,6 @@ target_link_libraries(test_lib_dir PRIVATE get_lib)
 
 add_test(NAME LibDirFortran COMMAND test_lib_dir)
 
+set_property(TEST LibDirFortran PROPERTY LABELS "Fortran")
+
 endif()

@@ -11,11 +11,15 @@ We also demonstrate techniques in C to reproduce some C++ filesystem functionali
 
 ## Canonical
 
-Creating "Lname" as entirely the lower case version of "Uname" deliberately forces the drive/root to be lower case.
+Creating [canonical](./test/canonical/) "Lname" as entirely the lower case version of "Uname" deliberately forces the drive/root to be lower case.
 In general full paths on Windows and macOS have some uppercase character elements:
 
 * Windows: upper case drive letter
 * macOS: /Users/ etc. has some upper case letters
+
+## file types
+
+Show what [type a file](./test/file_types/) is, such as regular file, directory, symlink, etc.
 
 ## lib_dir
 
@@ -25,7 +29,11 @@ This is relevant to say CMake installed project that has an executable and assoc
 Assuming the user knows the path to the MAIN executable in the installed directory, the program can determine its own full path and
 then a priori know the relative path to the data file(s).
 
-## Symlinks
+## Symbolic links
 
-Symbolic links are demonstrated across platforms, including Linux, macOS, Windows, MinGW, WSL, and Cygwin.
+[Symbolic links](./test/symlink/) are demonstrated across platforms, including Linux, macOS, Windows, MinGW, WSL, and Cygwin.
 Windows symlinks may require setting group policy (Windows Pro) or enabling Windows Developer Mode (non-Pro Windows).
+
+## Syscall
+
+[Example system calls](./test/syscall/) with mild effort towards security and cross-platform compatibility.
