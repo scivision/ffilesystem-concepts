@@ -17,6 +17,11 @@ In general full paths on Windows and macOS have some uppercase character element
 * Windows: upper case drive letter
 * macOS: /Users/ etc. has some upper case letters
 
+## Is executable
+
+[Is executable](./test/is_exe/) tests if a file is executable. On Windows filesystems such as NTFS, all files are always seen as executable.
+On most other filesystems, executable permissions can be detected.
+
 ## file types
 
 Show what [type a file](./test/file_types/) is, such as regular file, directory, symlink, etc.

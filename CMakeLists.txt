@@ -31,6 +31,6 @@ foreach(d IN ITEMS canonical file_types lib_dir symlink syscall)
 endforeach()
 
 # standalone tests
-foreach(d IN ITEMS chdir iterdir space_avail)
+foreach(d IN ITEMS chdir is_exe iterdir space_avail)
   add_subdirectory(test/${d})
 endforeach()
