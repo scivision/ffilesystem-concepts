@@ -22,8 +22,7 @@ void fs_create_symlink(const fs::path tgt, const fs::path lnk)
     return;
 
   DWORD err = GetLastError();
-  std::string message = std::system_category().message(err);
-  std::cerr << "ERROR:CreateSymbolicLink: " << err << ": " << message << "\n";
+  std::cerr << "ERROR:CreateSymbolicLink: " << tgt << " " << err << ": " << std::system_category().message(err) << "\n";
   if(err == ERROR_PRIVILEGE_NOT_HELD)
     throw std::runtime_error(R"(Enable Windows developer mode to use symbolic links:
     https://learn.microsoft.com/en-us/windows/apps/get-started/developer-mode-features-and-debugging)");

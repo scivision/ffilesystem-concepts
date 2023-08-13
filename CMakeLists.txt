@@ -31,6 +31,11 @@ foreach(d IN ITEMS canonical file_types lib_dir symlink syscall)
 endforeach()
 
 # standalone tests
-foreach(d IN ITEMS chdir is_exe iterdir space_avail)
+set(satest chdir is_exe iterdir space_avail)
+if(WIN32)
+  list(APPEND satest case_sensitive maximums short_path)
+endif()
+
+foreach(d IN LISTS satest)
   add_subdirectory(test/${d})
 endforeach()

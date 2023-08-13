@@ -18,5 +18,7 @@ else()
   set(case_sensitive true CACHE BOOL "case sensitive build filesystem")
 endif()
 
+message(STATUS "case_sensitive=${case_sensitive}")
+
 set(actual_name ${actual_name} CACHE FILEPATH "actual path of file" FORCE)
 set(Lname ${Lname} CACHE FILEPATH "lower case form of file path" FORCE)
