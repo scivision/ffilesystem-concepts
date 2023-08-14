@@ -4,8 +4,6 @@ project(FilesystemConcepts LANGUAGES C CXX)
 enable_testing()
 
 option(fortran "use Fortran" ON)
-include(CheckLanguage)
-check_language(Fortran)
 if(fortran)
   enable_language(Fortran)
 endif()
