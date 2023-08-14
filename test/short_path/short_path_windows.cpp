@@ -1,5 +1,6 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <memory>
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -8,39 +9,32 @@
 namespace fs = std::filesystem;
 
 
-std::string long2short(const std::string long_path){
+std::string long2short(const std::string in){
 // https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getshortpathnamew
 // the path must exist
 
-    if (!fs::exists(long_path)){
-      std::cerr << "ERROR:GetShortPathName: " << long_path << " does not exist\n";
+    if (!fs::exists(in)){
+      std::cerr << "ERROR:GetShortPathName: " << in << " does not exist\n";
       return {};
     }
 
     long length = 0;
-    char* buffer = nullptr;
-    const char* cpath = long_path.c_str();
-
+    auto buf = std::make_unique<char[]>(MAX_PATH);
 // size includes null terminator
-    length = GetShortPathNameA(cpath, nullptr, 0);
+    length = GetShortPathNameA(in.c_str(), nullptr, 0);
     if (length == 0) {
-      delete [] buffer;
       std::cerr << "ERROR:GetShortPathName: could not determine short path length\n";
       return {};
     }
 
-    buffer = new char[length];
-
 // convert long path
-    length = GetShortPathNameA(cpath, buffer, length);
+    length = GetShortPathNameA(in.c_str(), buf.get(), length);
     if (length == 0) {
-      delete [] buffer;
       std::cerr << "ERROR:GetShortPathName: could not determine short path\n";
       return {};
     }
 
-    std::string short_path(buffer);
-    delete [] buffer;
+    std::string short_path(buf.get());
 
     return short_path;
 }
@@ -56,29 +50,23 @@ std::string short2long(const std::string in){
     }
 
     long length = 0;
-    char* buffer = nullptr;
-    const char* cpath = in.c_str();
+    auto buf = std::make_unique<char[]>(MAX_PATH);
 
 // size includes null terminator
-    length = GetLongPathNameA(cpath, nullptr, 0);
+    length = GetLongPathNameA(in.c_str(), nullptr, 0);
     if (length == 0) {
-      delete [] buffer;
       std::cerr << "ERROR:GetLong: could not determine short path length\n";
       return {};
     }
 
-    buffer = new char[length];
-
 // convert short path
-    length = GetLongPathNameA(cpath, buffer, length);
+    length = GetLongPathNameA(in.c_str(), buf.get(), length);
     if (length == 0) {
-      delete [] buffer;
       std::cerr << "ERROR:GetLong could not determine short path\n";
       return {};
     }
 
-    std::string out(buffer);
-    delete [] buffer;
+    std::string out(buf.get());
 
     return out;
 }
