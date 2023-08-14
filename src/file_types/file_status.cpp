@@ -21,7 +21,7 @@ bool is_reserved(const char* path)
 
 #ifndef _WIN32
   return false;
-#endif
+#else
 
   std::set<std::string> reserved {
     "CON", "PRN", "AUX", "NUL",
@@ -35,6 +35,7 @@ bool is_reserved(const char* path)
   return reserved.contains(s);
 #else
   return reserved.find(s) != reserved.end();
+#endif
 #endif
 }
 
