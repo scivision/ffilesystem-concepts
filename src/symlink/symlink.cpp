@@ -27,11 +27,11 @@ void fs_create_symlink(const fs::path tgt, const fs::path lnk)
     throw std::runtime_error(R"(Enable Windows developer mode to use symbolic links:
     https://learn.microsoft.com/en-us/windows/apps/get-started/developer-mode-features-and-debugging)");
   throw std::system_error(err, std::system_category(), "CreateSymbolicLink");
-#endif
-
+#else
   fs::is_directory(tgt)
     ? fs::create_directory_symlink(tgt, lnk)
     : fs::create_symlink(tgt, lnk);
+#endif
 }
 
 
@@ -63,8 +63,9 @@ bool fs_is_symlink(const fs::path path)
   if(a == INVALID_FILE_ATTRIBUTES)
     return false;
   return a & FILE_ATTRIBUTE_REPARSE_POINT;
-#endif
+#else
   return fs::is_symlink(path);
+#endif
 }
 
 
@@ -74,7 +75,8 @@ fs::path fs_read_symlink(const fs::path path)
   return fs::path(fs_win32_read_symlink(path.string()));
   // on MinGW, canonical doesn't work for symlinks
   // return fs::canonical(path);
-#endif
+#else
   // canonical also resolves symlinks, but here we check that read_symlink works
   return fs::read_symlink(path);
+#endif
 }
