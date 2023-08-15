@@ -19,10 +19,6 @@ int main(int argc, char* argv[])
   _CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_FILE);
   _CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
 #endif
-  if(argc < 2 || argc > 3){
-    std::cerr << "Usage: " << argv[0] << " <top dir> [-r]\n";
-    return EXIT_FAILURE;
-  }
 
   if (argc == 2 || (argc == 3 && std::string(argv[2]) != "-r")){
     std::cout << "std::filesystem::directory_iterator:\n";

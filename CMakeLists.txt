@@ -25,8 +25,9 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
 # CPPcheck
 if(cppcheck)
   find_program(cppcheck_exe NAMES cppcheck REQUIRED)
-  set(CMAKE_C_CPPCHECK ${cppcheck_exe} --enable=all --inconclusive --std=c11 --suppress=missingIncludeSystem)
-  set(CMAKE_CXX_CPPCHECK ${cppcheck_exe} --enable=all --inconclusive --std=c++20 --suppress=missingIncludeSystem)
+  set(cppcheck_opts --enable=all --inline-suppr --quiet --suppressions-list=${PROJECT_SOURCE_DIR}/cppcheck.supp)
+  set(CMAKE_C_CPPCHECK ${cppcheck_exe} --std=c11 ${cppcheck_opts})
+  set(CMAKE_CXX_CPPCHECK ${cppcheck_exe} --std=c++20 ${cppcheck_opts})
 endif()
 
 # test + library
