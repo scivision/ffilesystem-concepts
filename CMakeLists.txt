@@ -31,7 +31,7 @@ if(cppcheck)
 endif()
 
 # test + library
-foreach(d IN ITEMS canonical file_types lib_dir symlink syscall)
+foreach(d IN ITEMS canonical file_parts file_types lib_dir symlink syscall)
   add_subdirectory(src/${d})
   add_subdirectory(test/${d})
 endforeach()
