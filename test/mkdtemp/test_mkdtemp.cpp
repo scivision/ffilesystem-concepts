@@ -29,8 +29,8 @@ int main(){
 
   char *tmpdir = mkdtemp(buf.get());
 
-  if (!tmpdir){
-    std::cerr << "ERROR:mkdtemp: could not create temporary directory\n";
+  if (std::strlen(tmpdir) == 0){
+    std::cerr << "ERROR:test_mkdtemp: temporary directory name empty\n";
     return EXIT_FAILURE;
   }
 

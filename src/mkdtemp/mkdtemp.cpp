@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-#include <iostream>
+#include <stdexcept>
 #include <cstring>
 #include <cstdlib>
 #include <filesystem>
-#include <cerrno>
 
 namespace fs = std::filesystem;
 
@@ -42,17 +41,13 @@ char* mkdtemp(char* tn) {
     if (mkstemp(tn) == -1
 #endif
      || tn == nullptr || *tn == '\0')
-    {
-      std::cerr << "ERROR:mkdtemp:mkstemp: could not create temporary name " << strerror(errno) << "\n";
-      return nullptr;
-    }
+       throw std::runtime_error("ERROR:mkdtemp:mkstemp: could not create temporary name");
 
 
     std::error_code ec;
-    if (!fs::create_directory(tn, ec) && ec != std::errc::file_exists) {
-      std::cerr << "ERROR:mkdtemp: could not create temporary directory " << ec.message() << "\n";
-      return nullptr;
-    }
+    if (!fs::create_directory(tn, ec) && ec != std::errc::file_exists)
+      throw std::runtime_error("ERROR:mkdtemp: could not create temporary directory " + ec.message());
+
   } while (ret != 0);
   return tn;
 }

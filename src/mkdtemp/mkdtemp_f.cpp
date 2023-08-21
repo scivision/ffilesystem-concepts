@@ -19,14 +19,16 @@ namespace fs = std::filesystem;
 
 
 extern "C" size_t mkdtemp_f(char* result, size_t buffer_size){
+  // Fortran - C++ interface function
   fs::path tmppath = fs::temp_directory_path() / "tempdir.XXXXXX";
 
   auto buf = std::make_unique<char[]>(MAX_PATH);
   std::strcpy(buf.get(), tmppath.string().c_str());
 
-  char *tmpdir = mkdtemp(buf.get());
-  if (!tmpdir){
-    std::cerr << "ERROR:mkdtemp: could not create temporary directory\n";
+  try {
+    char *tmpdir = mkdtemp(buf.get());
+  } catch (std::runtime_error& e) {
+    std::cerr << "ERROR:mkdtemp: " << e.what() << "\n";
     return 0;
   }
 

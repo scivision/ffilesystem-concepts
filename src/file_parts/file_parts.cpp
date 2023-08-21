@@ -8,6 +8,7 @@ namespace fs = std::filesystem;
 
 size_t fs_str2char(std::string s, char* result, size_t buffer_size)
 {
+  // string to char*, for Fortran interface
   if(s.length() >= buffer_size){
     result = nullptr;
     std::cerr << "ERROR:ffilesystem: output buffer too small for string: " << s << "\n";
