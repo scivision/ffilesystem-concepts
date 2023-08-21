@@ -2,12 +2,12 @@
 #include <iostream>
 #include <cstring>
 
-#ifdef HAVE_UNISTD_H
-# include <unistd.h>  // macOS mkdtemp
-#endif
-
 #ifndef HAVE_MKDTEMP
 #include "mkdtemp.h"
+#endif
+
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
 #endif
 
 #ifndef MAX_PATH
