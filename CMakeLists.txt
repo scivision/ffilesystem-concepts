@@ -31,6 +31,9 @@ if(cppcheck)
   set(CMAKE_CXX_CPPCHECK ${cppcheck_exe} --std=c++20 ${cppcheck_opts})
 endif()
 
+# utilities
+add_subdirectory(src)
+
 # test + library
 foreach(d IN ITEMS canonical file_parts file_types lib_dir mkdtemp symlink syscall)
   add_subdirectory(src/${d})

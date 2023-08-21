@@ -17,9 +17,11 @@ namespace fs = std::filesystem;
 #include <unistd.h>
 #endif
 
+#include "ffilesystem.h"
+
 
 extern "C" size_t mkdtemp_f(char* result, size_t buffer_size){
-  // Fortran - C++ interface function
+  // Fortran / C / C++ interface function
   fs::path tmppath = fs::temp_directory_path() / "tempdir.XXXXXX";
 
   auto buf = std::make_unique<char[]>(MAX_PATH);
@@ -32,7 +34,5 @@ extern "C" size_t mkdtemp_f(char* result, size_t buffer_size){
     return 0;
   }
 
-  std::strcpy(result, buf.get());
-
-  return std::strlen(result);
+  return fs_char2char(buf.get(), result, buffer_size);
 }
