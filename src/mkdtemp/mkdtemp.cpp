@@ -25,12 +25,10 @@
    Windows and Solaris 10.
 */
 
-#ifdef HAVE_CONFIG_H
-# include "config.h"
-#endif
+#include <random>
+#include <ranges>
 
 #include <mkdtemp.h>
-#include <mt19937-64.h>
 
 #ifdef _MSC_VER
 #include <process.h>  /* getpid */
@@ -42,23 +40,17 @@
 # define __set_errno(Val) errno = (Val)
 #endif
 
-#include <stddef.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstddef>
+#include <cstdlib>
+#include <cstring>
 
-#include <stdio.h>
+#include <cstdio>
 #ifndef TMP_MAX
 # define TMP_MAX 238328
 #endif
 
-/* This is a little strange: inttypes.h is supposed according to
-   POSIX to include stdint.h */
-#ifdef HAVE_STDINT_H
-# include <stdint.h>
-#endif
-#ifdef HAVE_INTTYPES_H
-# include <inttypes.h>
-#endif
+# include <cstdint>
+# include <cinttypes>
 
 #ifdef HAVE_UNISTD_H
 # include <unistd.h>
@@ -135,8 +127,16 @@ gen_tempname (char *tmpl)
   /* This is where the Xs start.  */
   XXXXXX = &tmpl[len - 6];
 
+  // https://stackoverflow.com/questions/45069219/how-to-succinctly-portably-and-thoroughly-seed-the-mt19937-prng
+  // https://stackoverflow.com/a/73878987
+  std::random_device rd;
+  auto rd_range = std::ranges::transform_view(std::ranges::iota_view(static_cast<std::size_t>(0), std::mt19937::state_size), [&rd](size_t){return rd();});
+  std::seed_seq seeds(rd_range.begin(), rd_range.end());
+  std::mt19937 gen(seeds);
+  std::uniform_int_distribution<unsigned long long> dist;
+
   /* Get some more or less random data.  We need 36 bits. */
-  random_time_bits = genrand64_int64();
+  random_time_bits = dist(gen);
   value += (random_time_bits << 8) ^ getpid ();
 
   for (count = 0; count < TMP_MAX; value += 7777, ++count)
@@ -181,11 +181,7 @@ gen_tempname (char *tmpl)
    they are replaced with a string that makes the filename unique.
    The directory is created, mode 700, and its name is returned.
    (This function comes from OpenBSD.) */
-char *
-mkdtemp (char *Template)
-#ifdef __cplusplus
-	throw()
-#endif
+char* mkdtemp (char *Template)
 {
   if (gen_tempname (Template))
     return NULL;
