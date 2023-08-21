@@ -38,7 +38,7 @@ int main(){
   // cleanup
   fs::remove_all(tmpdir);
 
-  std::cout << "OK: mkdtmep\n";
+  std::cout << "OK: mkdtemp\n";
 
   return EXIT_SUCCESS;
 }
