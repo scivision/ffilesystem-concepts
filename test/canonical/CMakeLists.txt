@@ -34,10 +34,10 @@ add_test(NAME CaseInsensitiveCPP
 COMMAND test_canonical_cpp ${Lname})
 # --- Fortran
 if(fortran)
-  add_executable(exe_dir_f test_canonical.f90)
-  target_link_libraries(exe_dir_f PRIVATE canonical_c)
+  add_executable(test_canonical_fortran test_canonical.f90)
+  target_link_libraries(test_canonical_fortran PRIVATE canonical_c)
 
-  add_test(NAME FortranExeDir COMMAND exe_dir_f)
+  add_test(NAME test_canonical_fortran COMMAND test_canonical_fortran)
 endif()
 
 

@@ -49,9 +49,12 @@ integer, parameter :: MAX = 4096
 
 allocate(character(MAX) :: cbuf)
 N = fs_realpath(trim(path) // C_NULL_CHAR, cbuf)
+if (N < 1) error stop "ERROR: fs_realpath failed"
 
 allocate(character(N) :: canonical)
 canonical = cbuf(:N)
+
+print '(a)', "OK: Fortran canonical " // canonical
 
 end function canonical
 
