@@ -16,8 +16,14 @@ add_compile_definitions(
   "$<$<BOOL:${MSVC}>:_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_WARNINGS>"
 )
 
-check_symbol_exists(mkdtemp "stdlib.h" HAVE_MKDTEMP)
 check_include_file("unistd.h" HAVE_UNISTD_H)
+
+if(APPLE)
+  check_symbol_exists(mkdtemp "unistd.h" HAVE_MKDTEMP)
+else()
+  check_symbol_exists(mkdtemp "stdlib.h" HAVE_MKDTEMP)
+endif()
+
 
 # fixes errors about needing -fPIE
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
