@@ -3,7 +3,6 @@
 
 set_property(DIRECTORY PROPERTY LABELS "lib_dir")
 
-include(CheckSymbolExists)
 include(GNUInstallDirs)
 
 

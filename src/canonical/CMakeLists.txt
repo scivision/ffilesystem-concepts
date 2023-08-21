@@ -10,7 +10,6 @@ add_library(canonical_c canonical.c
 $<$<BOOL:${WIN32}>:windows_read_symlink.c>
 )
 target_include_directories(canonical_c PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_compile_definitions(canonical_c PRIVATE $<$<BOOL:${MSVC}>:_CRT_SECURE_NO_WARNINGS>)
 
 # --- C++
 
