@@ -1,0 +1,3 @@
+# mkdtemp platform-independent
+
+mkdtemp() that works on all platforms we tried, including Windows, Linux, macOS with all compilers tried including GCC, Visual Studio, oneAPI, ...

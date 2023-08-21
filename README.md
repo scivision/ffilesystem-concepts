@@ -9,6 +9,12 @@ The main focus is on the C++17
 standard library.
 We also demonstrate techniques in C to reproduce some C++ filesystem functionality at lower fidelity--otherwise, we'd be reinventing the wheel.
 
+## platform-independent mkdtemp()
+
+Platform-independent
+[mkdtemp()](./test/mkdtemp/)
+is a C++17 example of creating a temporary directory that works on Windows, Linux, macOS, MinGW, Cygwin, WSL, etc. across compilers and operating systems.
+
 ## Canonical
 
 Creating [canonical](./test/canonical/) "Lname" as entirely the lower case version of "Uname" deliberately forces the drive/root to be lower case.

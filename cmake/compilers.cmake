@@ -16,6 +16,11 @@ add_compile_definitions(
   "$<$<BOOL:${MSVC}>:_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_WARNINGS>"
 )
 
+check_symbol_exists(mkdtemp "stdlib.h" HAVE_MKDTEMP)
+check_include_file("stdint.h" HAVE_STDINT_H)
+check_include_file("config.h" HAVE_CONFIG_H)
+check_include_file("unistd.h" HAVE_UNISTD_H)
+
 # fixes errors about needing -fPIE
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
   set(CMAKE_POSITION_INDEPENDENT_CODE true)

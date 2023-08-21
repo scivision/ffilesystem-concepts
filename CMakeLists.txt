@@ -8,6 +8,7 @@ if(fortran)
   enable_language(Fortran)
 endif()
 
+set(CMAKE_C_STANDARD 99)
 set(CMAKE_CXX_STANDARD 20)
 
 if(NOT CMAKE_Fortran_COMPILER_ID STREQUAL "NVHPC")
@@ -31,7 +32,7 @@ if(cppcheck)
 endif()
 
 # test + library
-foreach(d IN ITEMS canonical file_parts file_types lib_dir symlink syscall)
+foreach(d IN ITEMS canonical file_parts file_types lib_dir mkdtemp symlink syscall)
   add_subdirectory(src/${d})
   add_subdirectory(test/${d})
 endforeach()
@@ -45,3 +46,5 @@ endif()
 foreach(d IN LISTS satest)
   add_subdirectory(test/${d})
 endforeach()
+
+file(GENERATE OUTPUT .gitignore CONTENT "*")
