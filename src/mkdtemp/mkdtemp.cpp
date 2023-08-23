@@ -29,7 +29,8 @@ namespace fs = std::filesystem;
 
 #include "mkdtemp.h"
 
-char* mkdtemp(char* tn) {
+char* mkdtemp(char* tn) noexcept(false)
+{
   size_t len = strlen(tn);
   int ret = 0;
   do {

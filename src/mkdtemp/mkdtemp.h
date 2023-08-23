@@ -2,7 +2,7 @@
 extern "C" {
 #endif
 
-char* mkdtemp(char*);
+char* mkdtemp(char*) noexcept(false);
 
 #ifdef __cplusplus
 }
