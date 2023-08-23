@@ -1,53 +1,44 @@
 set_property(DIRECTORY PROPERTY LABELS "canonical")
 
-# --- C
+# --- canonical
+set(langs C CXX)
 
-add_executable(test_canonical_c test_canonical.c)
-target_link_libraries(test_canonical_c PRIVATE canonical_c)
 
-add_test(NAME CanonicalNotFoundC COMMAND test_canonical_c "not-exist-file")
-set_property(TEST CanonicalNotFoundC PROPERTY DISABLED $<BOOL:${CYGWIN}>)
+add_executable(test_canonical_C test_canonical.c)
+target_link_libraries(test_canonical_C PRIVATE canonical_c)
 
-file(CREATE_LINK ${CMAKE_CURRENT_LIST_FILE} ${CMAKE_CURRENT_BINARY_DIR}/test.lnk SYMBOLIC)
-add_test(NAME ResolveLinkC
-COMMAND test_canonical_c ${CMAKE_CURRENT_BINARY_DIR}/test.lnk
-)
+add_executable(test_canonical_CXX test_canonical.cpp)
+target_link_libraries(test_canonical_CXX PRIVATE canonical_cpp)
 
-include(${CMAKE_CURRENT_LIST_DIR}/case_sense.cmake)
-
-add_test(NAME CaseInsensitiveC
-COMMAND test_canonical_c ${Lname}
-)
-
-# --- C++
-
-add_executable(test_canonical_cpp test_canonical.cpp)
-target_link_libraries(test_canonical_cpp PRIVATE canonical_cpp)
-
-add_test(NAME CanonicalNotFoundCPP COMMAND test_canonical_cpp "not-exist-file")
-
-add_test(NAME ResolveLinkCPP
-COMMAND test_canonical_cpp ${CMAKE_CURRENT_BINARY_DIR}/test.lnk
-)
-
-add_test(NAME CaseInsensitiveCPP
-COMMAND test_canonical_cpp ${Lname})
-# --- Fortran
 if(fortran)
-  add_executable(test_canonical_fortran test_canonical.f90)
-  target_link_libraries(test_canonical_fortran PRIVATE canonical_c)
-
-  add_test(NAME test_canonical_fortran COMMAND test_canonical_fortran)
+  list(APPEND langs Fortran)
+  add_executable(test_canonical_Fortran test_canonical.f90)
+  target_link_libraries(test_canonical_Fortran PRIVATE canonical_c)
 endif()
 
+file(CREATE_LINK ${CMAKE_CURRENT_LIST_FILE} ${CMAKE_CURRENT_BINARY_DIR}/test.lnk SYMBOLIC)
+
+foreach(lang IN LISTS langs)
+  add_test(NAME ResolveLink${lang} COMMAND test_canonical_${lang} ${CMAKE_CURRENT_BINARY_DIR}/test.lnk)
+  add_test(NAME CanonicalNotFound${lang} COMMAND test_canonical_${lang} "not-exist-file")
+endforeach()
+
+# --- Ccase sensitive
+include(${CMAKE_CURRENT_LIST_DIR}/case_sense.cmake)
+
+foreach(lang IN ITEMS C CXX)
+  add_test(NAME CaseInsensitive${lang} COMMAND test_canonical_${lang} ${Lname})
+endforeach()
 
 # --- test properties
 
-set_property(TEST CaseInsensitiveC ResolveLinkC PROPERTY LABELS "C")
-set_property(TEST CaseInsensitiveCPP ResolveLinkCPP PROPERTY LABELS "Cpp")
+set_property(TEST CanonicalNotFoundC PROPERTY DISABLED $<BOOL:${CYGWIN}>)
 
-set_property(TEST CaseInsensitiveC CaseInsensitiveCPP PROPERTY DISABLED ${case_sensitive})
-set_property(TEST ResolveLinkC ResolveLinkCPP PROPERTY PASS_REGULAR_EXPRESSION "CMakeLists.txt\n$")
+set_property(TEST CaseInsensitiveC ResolveLinkC PROPERTY LABELS "C")
+set_property(TEST CaseInsensitiveCXX ResolveLinkCXX PROPERTY LABELS "Cpp")
+
+set_property(TEST CaseInsensitiveC CaseInsensitiveCXX PROPERTY DISABLED ${case_sensitive})
+set_property(TEST ResolveLinkC ResolveLinkCXX PROPERTY PASS_REGULAR_EXPRESSION "CMakeLists.txt\n$")
 
 if(WIN32 AND BUILD_SHARED_LIBS)
     get_property(test_names DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY TESTS)

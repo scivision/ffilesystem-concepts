@@ -3,15 +3,16 @@
 program my_dir
 !! get executable's directory, regardless of PWD or CWD
 
-use, intrinsic :: iso_c_binding, only : C_CHAR, C_INT, C_NULL_CHAR
+use, intrinsic :: iso_c_binding
 
 implicit none
 
 interface
-integer(C_INT) function fs_realpath(path, rpath) bind(C)
+integer(C_SIZE_T) function fs_realpath(path, rpath, buffer_size) bind(C)
 import
 character(kind=C_CHAR), intent(in) :: path(*)
 character(kind=C_CHAR), intent(out) :: rpath(*)
+integer(C_SIZE_T), intent(in), value :: buffer_size
 end function
 end interface
 
@@ -28,7 +29,7 @@ if(L < 2) error stop "ERROR: get_command_argument(0) returned L < 2: " // trim(b
 !! gfortran (Linux): relative path
 !! ifort/ifx (Windows or Linux), nvfortran, flang: relative path
 
-resolved = canonical(buf)
+resolved = canonical(trim(buf) // C_NULL_CHAR)
 print '(A)', "canonical(argv[0]) = " // trim(resolved)
 
 deallocate(resolved)
@@ -42,13 +43,13 @@ character(*), intent(in) :: path
 character(:), allocatable :: canonical
 
 character(kind=C_CHAR, len=:), allocatable :: cbuf
-integer :: N
+integer(C_SIZE_T) :: N
 
 integer, parameter :: MAX = 4096
 !! arbitrary PATH_MAX, see Ffilesystem for robust implementation
 
 allocate(character(MAX) :: cbuf)
-N = fs_realpath(trim(path) // C_NULL_CHAR, cbuf)
+N = fs_realpath(trim(path) // C_NULL_CHAR, cbuf, len(cbuf, kind=C_SIZE_T))
 if (N < 1) error stop "ERROR: fs_realpath failed"
 
 allocate(character(N) :: canonical)
