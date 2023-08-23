@@ -13,7 +13,7 @@ if(CMAKE_C_COMPILER_ID STREQUAL "IntelLLVM")
 endif()
 
 add_compile_definitions(
-  "$<$<BOOL:${MSVC}>:_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_WARNINGS>"
+  "$<$<AND:$<COMPILE_LANGUAGE:C,CXX>,$<BOOL:${MSVC}>>:_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_WARNINGS>"
 )
 
 check_include_file("unistd.h" HAVE_UNISTD_H)
