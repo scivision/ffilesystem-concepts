@@ -11,13 +11,7 @@ uintmax_t space_avail(const char* path)
   if(!path)
     return 0;
 
-  std::error_code ec;
-
-  auto si = fs::space(path, ec);
-  if(ec){
-    std::cerr << "ERROR:ffilesystem:space_avail " << ec.message() << "\n";
-    return 0;
-  }
+  auto si = fs::space(path);
 
   return static_cast<std::intmax_t>(si.available);
 }
