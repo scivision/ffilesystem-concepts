@@ -35,7 +35,7 @@ endforeach()
 set_property(TEST CanonicalNotFoundC PROPERTY DISABLED $<BOOL:${CYGWIN}>)
 
 set_property(TEST CaseInsensitiveC ResolveLinkC PROPERTY LABELS "C")
-set_property(TEST CaseInsensitiveCXX ResolveLinkCXX PROPERTY LABELS "Cpp")
+set_property(TEST CaseInsensitiveCXX ResolveLinkCXX PROPERTY LABELS "CXX")
 
 set_property(TEST CaseInsensitiveC CaseInsensitiveCXX PROPERTY DISABLED ${case_sensitive})
 set_property(TEST ResolveLinkC ResolveLinkCXX PROPERTY PASS_REGULAR_EXPRESSION "CMakeLists.txt\n$")

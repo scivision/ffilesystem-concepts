@@ -8,4 +8,4 @@ set_property(TEST chdir_c PROPERTY LABELS "C")
 
 add_executable(chdir_cpp chdir.cpp)
 add_test(NAME chdir_cpp COMMAND chdir_cpp ${CMAKE_CURRENT_SOURCE_DIR})
-set_property(TEST chdir_cpp PROPERTY LABELS "Cpp")
+set_property(TEST chdir_cpp PROPERTY LABELS "CXX")

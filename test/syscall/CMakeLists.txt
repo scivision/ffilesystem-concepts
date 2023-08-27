@@ -1,11 +1,14 @@
 set_property(DIRECTORY PROPERTY LABELS "syscall")
 
-add_executable(test_exec test_exec.c)
-target_link_libraries(test_exec PRIVATE exec)
+add_executable(test_exec_C test_exec.c)
+target_link_libraries(test_exec_C PRIVATE exec_C)
+add_test(NAME ExecC COMMAND test_exec_C)
+set_property(TEST ExecC PROPERTY LABELS "C")
 
-add_test(NAME Exec COMMAND test_exec)
-
-set_property(TEST Exec PROPERTY LABELS "C")
+add_executable(test_exec_CXX test_exec.cpp)
+target_link_libraries(test_exec_CXX PRIVATE exec_CXX)
+add_test(NAME ExecCXX COMMAND test_exec_CXX)
+set_property(TEST ExecCXX PROPERTY LABELS "CXX")
 
 if(WIN32)
 add_executable(test_create_process test_create_process.c)

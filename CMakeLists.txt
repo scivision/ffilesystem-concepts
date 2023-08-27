@@ -35,7 +35,7 @@ endif()
 add_subdirectory(src)
 
 # test + library
-foreach(d IN ITEMS canonical file_parts file_types lib_dir mkdtemp symlink syscall)
+foreach(d IN ITEMS canonical copytree file_parts file_types lib_dir mkdtemp symlink syscall)
   add_subdirectory(src/${d})
   add_subdirectory(test/${d})
 endforeach()

@@ -4,7 +4,7 @@ find_package(Python COMPONENTS Interpreter)
 
 add_executable(iterdir iterdir.cpp)
 add_test(NAME IterDirCPP COMMAND iterdir "${CMAKE_SOURCE_DIR}")
-set_property(TEST IterDirCPP PROPERTY LABELS "Cpp")
+set_property(TEST IterDirCPP PROPERTY LABELS "CXX")
 
 if(Python_Interpreter_FOUND)
   add_test(NAME IterDirPython

@@ -21,7 +21,7 @@
 
 namespace fs = std::filesystem;
 
-#ifdef _WIN32
+#ifdef _MSC_VER
 #include <io.h>  // _mktemp_s
 #else
 #include <unistd.h> // mkstemp (macOS)
@@ -35,7 +35,7 @@ char* mkdtemp(char* tn) noexcept(false)
   int ret = 0;
   do {
     std::strcpy(tn + len - 6, "XXXXXX");
-#ifdef _WIN32
+#ifdef _MSC_VER
     // if(_mktemp_s(tn, 7) != 0)
     if (!_mktemp(tn)
 #else

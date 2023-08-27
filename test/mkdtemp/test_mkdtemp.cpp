@@ -2,6 +2,7 @@
 #include <iostream>
 #include <cstring>
 #include <memory> // std::make_unique
+#include <stdexcept>
 
 #ifndef HAVE_MKDTEMP
 #include "mkdtemp.h"
@@ -37,9 +38,13 @@ int main(){
   std::cout << "temporary directory: " << tmpdir << '\n';
 
   // cleanup
-  fs::remove_all(tmpdir);
-
-  std::cout << "OK: mkdtemp\n";
+  std::error_code ec;
+  fs::remove(tmpdir, ec);
+  if(ec)
+    // typically an issue on Windows
+    std::cerr << "WARNING:test_mkdtemp: could not remove temporary dir: " << ec.message() << '\n';
+  else
+    std::cout << "OK: mkdtemp\n";
 
   return EXIT_SUCCESS;
 }

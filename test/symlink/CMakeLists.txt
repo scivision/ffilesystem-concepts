@@ -6,4 +6,4 @@ target_link_libraries(test_symlink PRIVATE symlink)
 
 add_test(NAME CppSymlink COMMAND test_symlink)
 
-set_property(TEST CppSymlink PROPERTY LABELS "Cpp")
+set_property(TEST CppSymlink PROPERTY LABELS "CXX")
