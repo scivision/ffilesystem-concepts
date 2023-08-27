@@ -1,9 +1,1 @@
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-char* mkdtemp(char*) noexcept(false);
-
-#ifdef __cplusplus
-}
-#endif
+std::string mkdtemp(const std::string);

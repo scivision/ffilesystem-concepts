@@ -1,50 +1,50 @@
 #include <cstdlib>
 #include <iostream>
 #include <cstring>
-#include <memory> // std::make_unique
+#include <string>
 #include <stdexcept>
-
-#ifndef HAVE_MKDTEMP
-#include "mkdtemp.h"
-#endif
-
-#if __has_include(<unistd.h>)
-#include <unistd.h>
-#endif
-
-#ifndef MAX_PATH
-#define MAX_PATH 1024
-#endif
 
 #include <filesystem>
 
 namespace fs = std::filesystem;
 
+#include "mkdtemp.h"
+
+#ifdef _MSC_VER
+#include <crtdbg.h>
+#endif
+
 
 int main(){
+#ifdef _MSC_VER
+  _CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_FILE);
+  _CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDERR);
+  _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
+  _CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
+  _CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_FILE);
+  _CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
+#endif
 
-  fs::path tmppath = fs::temp_directory_path() / "tempdir.XXXXXX";
+  fs::path tempdir(mkdtemp("tempdir."));
 
-  auto buf = std::make_unique<char[]>(MAX_PATH);
-  std::strcpy(buf.get(), tmppath.string().c_str());
+  if(!fs::is_directory(tempdir))
+    throw fs::filesystem_error("mkdtemp: temporary directory does not exist", tempdir, std::error_code(errno, std::system_category()));
 
-  char *tmpdir = mkdtemp(buf.get());
+  std::cout << "temporary directory: " << tempdir << '\n';
 
-  if (std::strlen(tmpdir) == 0){
-    std::cerr << "ERROR:test_mkdtemp: temporary directory name empty\n";
-    return EXIT_FAILURE;
-  }
+  fs::path t2 = tempdir / "test_dir";
 
-  std::cout << "temporary directory: " << tmpdir << '\n';
+  if(!fs::create_directory(t2))
+     throw fs::filesystem_error("mkdtemp:mkdir: could not create new directory", t2, std::error_code(errno, std::system_category()));
 
   // cleanup
-  std::error_code ec;
-  fs::remove(tmpdir, ec);
-  if(ec)
-    // typically an issue on Windows
-    std::cerr << "WARNING:test_mkdtemp: could not remove temporary dir: " << ec.message() << '\n';
-  else
+  try {
+    fs::remove_all(tempdir);
     std::cout << "OK: mkdtemp\n";
+  } catch (fs::filesystem_error& e) {
+    // typically an issue on Windows
+    std::cerr << "WARNING:test_mkdtemp: could not remove temporary dir: " << e.what() << '\n';
+  }
 
   return EXIT_SUCCESS;
 }

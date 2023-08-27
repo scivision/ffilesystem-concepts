@@ -1,54 +1,69 @@
-/*
- * Copyright (c) Meta Platforms, Inc. and affiliates.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+#include <algorithm>
+#include <array>
+#include <cstring>
+#include <functional>
+#include <random>
+#include <string>
 
 #include <stdexcept>
-#include <cstring>
-#include <cstdlib>
+
 #include <filesystem>
 
 namespace fs = std::filesystem;
 
-#ifdef _MSC_VER
-#include <io.h>  // _mktemp_s
-#else
-#include <unistd.h> // mkstemp (macOS)
-#endif
-
 #include "mkdtemp.h"
+#include "ffilesystem.h"
 
-char* mkdtemp(char* tn) noexcept(false)
+// CTAD C++17 random string generator
+// https://stackoverflow.com/a/444614
+
+template <typename T = std::mt19937>
+auto random_generator() -> T {
+    auto constexpr seed_bytes = sizeof(typename T::result_type) * T::state_size;
+    auto constexpr seed_len = seed_bytes / sizeof(std::seed_seq::result_type);
+    auto seed = std::array<std::seed_seq::result_type, seed_len>();
+    auto dev = std::random_device();
+    std::generate_n(begin(seed), seed_len, std::ref(dev));
+    auto seed_seq = std::seed_seq(begin(seed), end(seed));
+    return T{seed_seq};
+}
+
+auto generate_random_alphanumeric_string(std::size_t len) -> std::string {
+    static constexpr auto chars =
+        "0123456789"
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        "abcdefghijklmnopqrstuvwxyz";
+    thread_local auto rng = random_generator<>();
+    auto dist = std::uniform_int_distribution{{}, std::strlen(chars) - 1};
+    auto result = std::string(len, '\0');
+    std::generate_n(begin(result), len, [&]() { return chars[dist(rng)]; });
+    return result;
+}
+
+extern "C" size_t mkdtemp_f(char* result, size_t buffer_size){
+  // Fortran / C / C++ interface function
+
+  std::string tmpdir = mkdtemp("tempdir.");
+
+  return fs_str2char(tmpdir, result, buffer_size);
+}
+
+
+std::string mkdtemp(std::string prefix)
 {
-  size_t len = strlen(tn);
-  int ret = 0;
+  // make unique temporary directory starting with prefix
+
+  size_t Lname = 16;  // arbitrary length for random string
+
+  fs::path tdir = fs::temp_directory_path();
+
+  fs::path t;
   do {
-    std::strcpy(tn + len - 6, "XXXXXX");
-#ifdef _MSC_VER
-    // if(_mktemp_s(tn, 7) != 0)
-    if (!_mktemp(tn)
-#else
-    if (mkstemp(tn) == -1
-#endif
-     || tn == nullptr || *tn == '\0')
-       throw std::runtime_error("ERROR:mkdtemp:mkstemp: could not create temporary name");
+    t = (tdir / (prefix + generate_random_alphanumeric_string(Lname)));
+  } while (fs::is_directory(t));
 
+  if (!fs::create_directory(t))
+    throw fs::filesystem_error("mkdtemp:mkdir: could not create temporary directory", t, std::error_code(errno, std::system_category()));
 
-    std::error_code ec;
-    if (!fs::create_directory(tn, ec) && ec != std::errc::file_exists)
-      throw std::runtime_error("ERROR:mkdtemp: could not create temporary directory " + ec.message());
-
-  } while (ret != 0);
-  return tn;
+  return t.generic_string();
 }
