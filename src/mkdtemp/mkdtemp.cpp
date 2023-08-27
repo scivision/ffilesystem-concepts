@@ -1,3 +1,4 @@
+// C++ approach to making a unique temporary directory
 #include <algorithm>
 #include <array>
 #include <cstring>
@@ -43,13 +44,13 @@ auto generate_random_alphanumeric_string(std::size_t len) -> std::string {
 extern "C" size_t mkdtemp_f(char* result, size_t buffer_size){
   // Fortran / C / C++ interface function
 
-  std::string tmpdir = mkdtemp("tempdir.");
+  std::string tmpdir = fs_make_tempdir("tempdir.");
 
   return fs_str2char(tmpdir, result, buffer_size);
 }
 
 
-std::string mkdtemp(std::string prefix)
+std::string fs_make_tempdir(std::string prefix)
 {
   // make unique temporary directory starting with prefix
 
@@ -63,7 +64,7 @@ std::string mkdtemp(std::string prefix)
   } while (fs::is_directory(t));
 
   if (!fs::create_directory(t))
-    throw fs::filesystem_error("mkdtemp:mkdir: could not create temporary directory", t, std::error_code(errno, std::system_category()));
+    throw fs::filesystem_error("fs_make_tempdir:mkdir: could not create temporary directory", t, std::error_code(errno, std::system_category()));
 
   return t.generic_string();
 }

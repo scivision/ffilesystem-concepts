@@ -1,1 +1,1 @@
-std::string mkdtemp(const std::string);
+std::string fs_make_tempdir(const std::string);
