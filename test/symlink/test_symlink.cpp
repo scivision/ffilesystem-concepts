@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <cstdlib>
+#include <exception>
 
 #include "symlink.h"
 

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <cstdlib>
+#include <exception>
 #include <filesystem>
 
 namespace fs = std::filesystem;
@@ -18,21 +19,16 @@ std::string long2short(const std::string in){
       return {};
     }
 
-    long length = 0;
     auto buf = std::make_unique<char[]>(MAX_PATH);
 // size includes null terminator
-    length = GetShortPathNameA(in.c_str(), nullptr, 0);
-    if (length == 0) {
-      std::cerr << "ERROR:GetShortPathName: could not determine short path length\n";
-      return {};
-    }
+    DWORD L=0;
+    L = GetShortPathNameA(in.c_str(), nullptr, 0);
+    if (L == 0)
+      throw std::runtime_error("GetShortPathName: could not determine short path length");
 
 // convert long path
-    length = GetShortPathNameA(in.c_str(), buf.get(), length);
-    if (length == 0) {
-      std::cerr << "ERROR:GetShortPathName: could not determine short path\n";
-      return {};
-    }
+    if(!GetShortPathNameA(in.c_str(), buf.get(), L))
+      throw std::runtime_error("GetShortPathName: could not determine short path");
 
     std::string short_path(buf.get());
 
@@ -44,27 +40,20 @@ std::string short2long(const std::string in){
 // https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getlongpathnamea
 // the path must exist
 
-    if (!fs::exists(in)){
-      std::cerr << "ERROR:GetLong: " << in << " does not exist\n";
-      return {};
-    }
+    if (!fs::exists(in))
+      throw std::runtime_error("GetLong: " + in + " does not exist");
 
-    long length = 0;
     auto buf = std::make_unique<char[]>(MAX_PATH);
 
 // size includes null terminator
-    length = GetLongPathNameA(in.c_str(), nullptr, 0);
-    if (length == 0) {
-      std::cerr << "ERROR:GetLong: could not determine short path length\n";
-      return {};
-    }
+    DWORD L=0;
+    L = GetLongPathNameA(in.c_str(), nullptr, 0);
+    if (L == 0)
+      throw std::runtime_error("GetLong: could not determine path length");
 
 // convert short path
-    length = GetLongPathNameA(in.c_str(), buf.get(), length);
-    if (length == 0) {
-      std::cerr << "ERROR:GetLong could not determine short path\n";
-      return {};
-    }
+    if(!GetLongPathNameA(in.c_str(), buf.get(), L))
+      throw std::runtime_error("GetLong could not determine path length");
 
     std::string out(buf.get());
 

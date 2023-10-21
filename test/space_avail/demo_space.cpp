@@ -17,6 +17,7 @@ void print_space_info(auto const& dirs, int width = 15)
     for (const auto s : {"Capacity", "Free", "Available", "Dir"})
         std::cout << "│ " << std::setw(width) << s << ' ';
     std::cout << '\n';
+
     std::error_code ec;
     for (auto const& dir : dirs) {
         const std::filesystem::space_info si = std::filesystem::space(dir, ec);

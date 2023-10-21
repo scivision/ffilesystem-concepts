@@ -4,6 +4,7 @@
 #include <string>
 #include <cstdlib>
 #include <filesystem>
+#include <exception>
 
 namespace fs = std::filesystem;
 
@@ -12,30 +13,21 @@ namespace fs = std::filesystem;
 // Discussion of general issues across operating systems.
 // https://github.com/dotnet/runtime/issues/14321
 
-int is_case_sensitive(std::string drive){
+bool is_case_sensitive(std::string drive){
 // https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getvolumeinformationa
 
-  if (drive.empty()){
-    std::cerr << "ERROR: No drive specified.\n";
-    return EXIT_FAILURE;
-  }
+  if (drive.empty())
+    throw std::runtime_error("No drive specified.");
 
-  if (!fs::exists(drive)){
-    std::cerr << "ERROR: " << drive << " does not exist.\n";
-   return -1;
-  }
+  if (!fs::exists(drive))
+    throw std::runtime_error(drive + " does not exist.");
 
   DWORD lpFileSystemFlags=0;
 
-  if(!GetVolumeInformationA(drive.c_str(), 0, 0, 0, 0, &lpFileSystemFlags, 0, 0)){
-    DWORD err = GetLastError();
-    std::cerr << "ERROR:GetVolumeInformation: " << drive << " " << err << ": " << std::system_category().message(err) << "\n";
-    return -1;
-  }
+  if(!GetVolumeInformationA(drive.c_str(), 0, 0, 0, 0, &lpFileSystemFlags, 0, 0))
+    throw std::runtime_error("GetVolumeInformation: " + drive + " " + std::system_category().message(GetLastError()));
 
-  bool case_sense = FILE_CASE_SENSITIVE_SEARCH & lpFileSystemFlags;
-
-  return case_sense;
+  return bool(FILE_CASE_SENSITIVE_SEARCH & lpFileSystemFlags);
 }
 
 
@@ -50,21 +42,15 @@ int main(int argc, char* argv[]){
 
   fs::path p(drive);
 
-  if (!p.has_root_path()){
-    std::cerr << "ERROR: " << drive << " is not a valid path.\n";
-    return EXIT_FAILURE;
-  }
+  if (!p.has_root_path())
+    throw std::runtime_error(drive + " is not a valid path.");
 
   drive = p.root_name().string();
 
   if(drive.back() != '\\')
     drive.push_back('\\');
 
-  int case_sens = is_case_sensitive(drive);
-  if (case_sens < 0)
-    return EXIT_FAILURE;
-
-  std::cout << drive << " case sensitive: " << bool(case_sens) << "\n";
+  std::cout << drive << " case sensitive: " << is_case_sensitive(drive) << "\n";
 
   return EXIT_SUCCESS;
 }

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <string>
+#include <exception>
 
 #include "canonical.h"
 
@@ -15,10 +16,8 @@ int main(int argc, char* argv[])
   std::string in(argv[1]);
 
   std::string out = fs_realpath(in);
-  if (out.empty()) {
-    std::cerr << "test_canonical_cpp: failed to canonicalize path " << in << "\n";
-    return EXIT_FAILURE;
-  }
+  if (out.empty())
+    throw std::runtime_error("test_canonical_cpp: failed to canonicalize path " + in);
 
   std::cout << out << '\n';
 

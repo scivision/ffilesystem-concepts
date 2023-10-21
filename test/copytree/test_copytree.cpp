@@ -2,6 +2,7 @@
 
 #include <cstdlib>
 #include <filesystem>
+#include <exception>
 #include <iostream>
 
 namespace fs = std::filesystem;
@@ -17,16 +18,13 @@ int main(){
     auto src = ds / name;
     auto dst = dd / name;
 
-
     fs::create_directories(ds);
     touch(src.string());
 
     copytree(ds.string(), dd.string(), true);
 
-    if(!fs::is_regular_file(dst)){
-        std::cerr << dst << " is not a regular file\n";
-        return EXIT_FAILURE;
-    }
+    if(!fs::is_regular_file(dst))
+      throw std::runtime_error(dst.generic_string() + " is not a regular file");
 
     std::cout << "OK: copytree: " << src.generic_string() << " => " << dst.generic_string() << "\n";
 

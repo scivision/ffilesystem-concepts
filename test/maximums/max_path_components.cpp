@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <cstdlib>
+#include <exception>
 
 size_t get_max_path_components(std::string drive){
 // https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getvolumeinformationa
@@ -10,11 +11,8 @@ size_t get_max_path_components(std::string drive){
 
 DWORD lpMaximumComponentLength = 0;
 
-if(!GetVolumeInformationA(drive.c_str(), 0, 0, 0, &lpMaximumComponentLength, 0, 0, 0)){
-  DWORD err = GetLastError();
-  std::cerr << "ERROR:GetVolumeInformation: " << drive << " " << err << ": " << std::system_category().message(err) << "\n";
-  return 0;
-}
+if(!GetVolumeInformationA(drive.c_str(), 0, 0, 0, &lpMaximumComponentLength, 0, 0, 0))
+  throw std::runtime_error("GetVolumeInformation: " + drive + " " + std::system_category().message(GetLastError()));
 
 return lpMaximumComponentLength;
 }
@@ -31,9 +29,6 @@ int main(int argc, char* argv[]){
     drive = argv[1];
 
   size_t maxcomp = get_max_path_components(drive);
-  if (maxcomp == 0)
-    return EXIT_FAILURE;
-
 
   std::cout << drive << " max_path_components: " << maxcomp << "\n";
 
