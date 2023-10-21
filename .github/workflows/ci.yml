@@ -35,7 +35,7 @@ jobs:
     - name: install ninja
       run: sudo apt install --no-install-recommends ninja-build
 
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Debug workflow
       run: cmake --workflow --preset debug
@@ -50,7 +50,7 @@ jobs:
 
     strategy:
       matrix:
-        clang-version: [12, 13, 14]
+        clang-version: [13, 14]
 
     env:
       CC: clang-${{ matrix.clang-version }}
@@ -62,7 +62,7 @@ jobs:
     - name: install ninja
       run: sudo apt install --no-install-recommends ninja-build
 
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Debug workflow
       run: cmake --workflow --preset debug
@@ -80,7 +80,7 @@ jobs:
     - name: install valgrind
       run: sudo apt install --no-install-recommends valgrind
 
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - run: ctest -S memcheck.cmake -V -LE python
 
@@ -102,7 +102,7 @@ jobs:
     steps:
     - run: brew install ninja
 
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Debug workflow
       run: cmake --workflow --preset debug
@@ -127,7 +127,7 @@ jobs:
     - name: Put MSYS2_MinGW64 on PATH
       run: echo "${{ runner.temp }}/msys64/mingw64/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Debug workflow
       run: cmake --workflow --preset debug
