@@ -71,14 +71,10 @@ int main(int argc, char** argv){
       long_path = argv[1];
 
     std::string short_path = long2short(long_path);
-    if (short_path.empty())
-      return EXIT_FAILURE;
 
     std::cout << long_path << " => " << short_path << '\n';
 
     std::string long_path2 = short2long(short_path);
-    if (long_path2.empty())
-      return EXIT_FAILURE;
 
     std::cout << short_path << " => " << long_path2 << '\n';
 
