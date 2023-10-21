@@ -1,4 +1,9 @@
-cmake_minimum_required(VERSION 3.14...3.27)
+cmake_minimum_required(VERSION 3.15...3.28)
+
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
+  message(FATAL_ERROR "Please use out of source build like:
+  cmake -Bbuild")
+endif()
 
 project(FilesystemConcepts LANGUAGES C CXX)
 enable_testing()
@@ -13,7 +18,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 if(NOT CMAKE_Fortran_COMPILER_ID STREQUAL "NVHPC")
 # bug in CMake for NVHPC "-Werror all-warnings" not valid flag
-set(CMAKE_COMPILE_WARNING_AS_ERROR ON)
+  set(CMAKE_COMPILE_WARNING_AS_ERROR ON)
 endif()
 
 include(cmake/compilers.cmake)
@@ -41,7 +46,7 @@ foreach(d IN ITEMS canonical copytree file_parts file_types lib_dir mkdtemp syml
 endforeach()
 
 # standalone tests
-set(satest chdir is_exe iterdir space_avail)
+set(satest chdir home_dir is_exe iterdir space_avail)
 if(WIN32)
   list(APPEND satest case_sensitive maximums short_path)
 endif()
