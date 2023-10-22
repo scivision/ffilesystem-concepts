@@ -5,7 +5,7 @@ use, intrinsic :: iso_c_binding
 implicit none
 
 interface
-integer(C_SIZE_T) function mkdtemp_f(result, buffer_size) bind(C)
+integer(C_SIZE_T) function fs_make_tempdir(result, buffer_size) bind(C)
 import
 character(kind=C_CHAR), intent(out) :: result(*)
 integer(C_SIZE_T), intent(in), value :: buffer_size
@@ -13,21 +13,24 @@ end function
 
 end interface
 
-character(2048, kind=C_CHAR) :: path
+integer, parameter :: MAX_PATH = 8191
+
 character(:), allocatable :: temp_dir
-!! arbitrary buffer size
 
-integer(C_SIZE_T) :: L
-
-L = mkdtemp_f(path, len(path, kind=C_SIZE_T))
-if(L == 0) error stop "ERROR: Fortran mkdtemp got empty string"
-
-allocate(character(L) :: temp_dir)
-temp_dir = path(:L)
+temp_dir = make_tempdir()
 
 print '(a)', "OK: Fortran mkdtemp: " // temp_dir
 
-deallocate(temp_dir)
-!! for valgrind, not always detected/needed in Fortran main programs.
+contains
+
+function make_tempdir() result (r)
+character(:), allocatable :: r
+character(kind=c_char, len=:), allocatable :: cbuf
+integer(C_SIZE_T) :: N
+allocate(character(MAX_PATH) :: cbuf)
+N = fs_make_tempdir(cbuf, len(cbuf, kind=C_SIZE_T))
+allocate(character(N) :: r)
+r = cbuf(:N)
+end function
 
 end program

@@ -41,7 +41,7 @@ auto generate_random_alphanumeric_string(std::size_t len) -> std::string {
     return result;
 }
 
-extern "C" size_t mkdtemp_f(char* result, size_t buffer_size){
+size_t fs_make_tempdir(char* result, size_t buffer_size){
   // Fortran / C / C++ interface function
 
   std::string tmpdir = fs_make_tempdir("tempdir.");
