@@ -15,11 +15,13 @@ end interface
 
 integer, parameter :: MAX_PATH = 8191
 
+block
 character(:), allocatable :: temp_dir
 
 temp_dir = make_tempdir()
 
 print '(a)', "OK: Fortran mkdtemp: " // temp_dir
+end block !< valgrind tweak
 
 contains
 
