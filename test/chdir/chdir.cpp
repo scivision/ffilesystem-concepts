@@ -22,11 +22,11 @@ int main(int argc, char* argv[]){
   if(argc != 2)
     throw std::runtime_error("Usage: " + std::string(argv[0]) + " <path>");
 
-  std::cout << "Current path: " << fs_getcwd() << '\n';
+  std::cout << "Current path: " << fs_get_cwd() << '\n';
 
   fs_chdir(std::string(argv[1]));
 
-  std::cout << "New current path: " << fs_getcwd() << '\n';
+  std::cout << "New current path: " << fs_get_cwd() << '\n';
 
   return EXIT_SUCCESS;
 }
