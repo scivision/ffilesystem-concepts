@@ -23,6 +23,14 @@ In general full paths on Windows and macOS have some uppercase character element
 * Windows: upper case drive letter
 * macOS: /Users/ etc. has some upper case letters
 
+## Copy file tree
+
+Recursively [copy a file tree](./test/copytree/).
+
+## Iterate over directory
+
+[Example](./test/iterdir/) of iterating over directory contents.
+
 ## Is executable
 
 [Is executable](./test/is_exe/) tests if a file is executable. On Windows filesystems such as NTFS, all files are always seen as executable.
@@ -39,6 +47,14 @@ This can be useful when a data file is known to exist relative to an executable.
 This is relevant to say CMake installed project that has an executable and associated data files installed.
 Assuming the user knows the path to the MAIN executable in the installed directory, the program can determine its own full path and
 then a priori know the relative path to the data file(s).
+
+## Drive space available
+
+Determine the [free space available on a drive](./test/space_avail/).
+
+## Windows short path
+
+For Windows only, find the short path (8.3) from a long filename and [vice versa](./test/short_path/).
 
 ## Symbolic links
 

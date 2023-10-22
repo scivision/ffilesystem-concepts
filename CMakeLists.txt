@@ -40,13 +40,13 @@ endif()
 add_subdirectory(src)
 
 # test + library
-foreach(d IN ITEMS canonical copytree file_parts file_types lib_dir mkdtemp symlink syscall)
+foreach(d IN ITEMS canonical chdir copytree file_parts file_types lib_dir mkdtemp symlink syscall)
   add_subdirectory(src/${d})
   add_subdirectory(test/${d})
 endforeach()
 
 # standalone tests
-set(satest chdir home_dir is_exe iterdir space_avail)
+set(satest home_dir is_exe iterdir space_avail)
 if(WIN32)
   list(APPEND satest case_sensitive maximums short_path)
 endif()

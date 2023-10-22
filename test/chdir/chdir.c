@@ -52,7 +52,6 @@ int main(int argc, char* argv[]){
     return EXIT_FAILURE;
   }
 
-
   char cwd[MAXP];
   get_cwd(cwd);
   printf("Current path: %s \n", cwd);

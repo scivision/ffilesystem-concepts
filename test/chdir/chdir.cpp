@@ -1,6 +1,4 @@
-#include <filesystem>
 #include <iostream>
-#include <string>
 #include <cstdlib>
 #include <exception>
 
@@ -8,11 +6,8 @@
 #include <crtdbg.h>
 #endif
 
-namespace fs = std::filesystem;
+#include "fs_chdir.h"
 
-void fs_chdir(const std::string& path){
-  fs::current_path(path);
-}
 
 int main(int argc, char* argv[]){
 #ifdef _MSC_VER
@@ -27,12 +22,11 @@ int main(int argc, char* argv[]){
   if(argc != 2)
     throw std::runtime_error("Usage: " + std::string(argv[0]) + " <path>");
 
-  fs::path cp = fs::current_path();
-  std::cout << "Current path: " << cp.generic_string() << '\n';
+  std::cout << "Current path: " << fs_getcwd() << '\n';
 
   fs_chdir(std::string(argv[1]));
 
-  std::cout << "New current path: " << fs::current_path().generic_string() << '\n';
+  std::cout << "New current path: " << fs_getcwd() << '\n';
 
   return EXIT_SUCCESS;
 }
