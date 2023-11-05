@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <cstring>
 #include <memory>
 
 #ifdef _WIN32
@@ -13,7 +14,6 @@
 
 std::string fs_homedir() {
 
-#if 0 // to test secondary methods below
   auto r = std::getenv(
 #ifdef _WIN32
   "USERPROFILE"
@@ -22,10 +22,12 @@ std::string fs_homedir() {
 #endif
   );
 
-  if(r)
+  if(r && std::strlen(r) > 0) {
+    std::cout << "get_homedir: used env var ";
     return std::string(r);
-#endif
+  }
 
+  std::cout << "get_homedir: using fallback\n";
   std::string homedir;
 #ifdef _WIN32
   // works on MSYS2, MSVC, oneAPI.
@@ -49,6 +51,7 @@ std::string fs_homedir() {
   homedir = std::string(h);
 #endif
 
+  std::cout << "get_homedir: used fallback ";
   return homedir;
 }
 
