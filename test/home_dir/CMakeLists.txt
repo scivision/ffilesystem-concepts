@@ -1,7 +1,7 @@
 set_property(DIRECTORY PROPERTY LABELS "mkdtemp")
 
 add_executable(test_home_dir test_home_dir.cpp)
-target_link_libraries(test_home_dir PRIVATE $<$<BOOL:${WIN32}>:Userenv>)
+target_link_libraries(test_home_dir PRIVATE "$<$<BOOL:${WIN32}>:Userenv;Advapi32>")
 
 add_test(NAME HomeDirEnv COMMAND test_home_dir)
 
