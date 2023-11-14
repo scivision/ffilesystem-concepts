@@ -6,6 +6,8 @@
 #
 # ctest -DMEMCHECK_ROOT=/path/to/bin/valgrind -S memcheck.cmake
 
+cmake_minimum_required(VERSION 3.19)
+
 list(APPEND opts -DCMAKE_BUILD_TYPE=Debug)
 
 set(CTEST_TEST_TIMEOUT 60)
@@ -17,16 +19,15 @@ endif()
 
 if(CTEST_MEMORYCHECK_TYPE STREQUAL "Valgrind")
   # https://www.cprogramming.com/debugging/valgrind.html
-  find_program(exe NAMES valgrind HINTS ${MEMCHECK_ROOT} PATH_SUFFIXES bin REQUIRED)
-  set(CTEST_MEMORYCHECK_COMMAND ${exe})
+  find_program(CTEST_MEMORYCHECK_COMMAND NAMES valgrind HINTS ${MEMCHECK_ROOT} REQUIRED)
+  set(CTEST_MEMORYCHECK_COMMAND_OPTIONS --leak-check=full)
   set(supp ${CMAKE_CURRENT_LIST_DIR}/valgrind.supp)
   if(EXISTS ${supp})
-    set(CTEST_MEMORYCHECK_COMMAND_OPTIONS --suppressions=${supp})
+    list(APPEND CTEST_MEMORYCHECK_COMMAND_OPTIONS --suppressions=${supp})
   endif()
 elseif(CTEST_MEMORYCHECK_TYPE STREQUAL "DrMemory")
-  find_program(exe NAMES drmemory HINTS ${MEMCHECK_ROOT} PATH_SUFFIXES bin64 bin REQUIRED)
-  set(CTEST_MEMORYCHECK_COMMAND ${exe})
-  set(CTEST_MEMORYCHECK_COMMAND_OPTIONS "-light -count_leaks")
+  find_program(CTEST_MEMORYCHECK_COMMAND NAMES drmemory HINTS ${MEMCHECK_ROOT} REQUIRED)
+  set(CTEST_MEMORYCHECK_COMMAND_OPTIONS -light -count_leaks)
 elseif(CTEST_MEMORYCHECK_TYPE STREQUAL "AddressSanitizer")
   set(check_flags -fsanitize=address)
 elseif(CTEST_MEMORYCHECK_TYPE STREQUAL "LeakSanitizer")
@@ -55,16 +56,15 @@ set(CTEST_BUILD_CONFIGURATION Debug)
 
 if(DEFINED ENV{CMAKE_GENERATOR})
   set(CTEST_CMAKE_GENERATOR $ENV{CMAKE_GENERATOR})
+elseif(WIN32)
+  set(CTEST_CMAKE_GENERATOR "MinGW Makefiles")
 else()
-  if(WIN32)
-    set(CTEST_CMAKE_GENERATOR "MinGW Makefiles")
-  else()
-    set(CTEST_CMAKE_GENERATOR "Unix Makefiles")
-  endif()
-  set(CTEST_BUILD_FLAGS -j)
+  set(CTEST_CMAKE_GENERATOR "Unix Makefiles")
 endif()
 
-message(STATUS "Checker ${CTEST_MEMORYCHECK_TYPE}: ${CTEST_MEMORYCHECK_COMMAND}  ${CTEST_CMAKE_GENERATOR}")
+message(STATUS "Checker ${CTEST_MEMORYCHECK_TYPE}: ${CTEST_MEMORYCHECK_COMMAND}")
+
+string(REPLACE ";" " " CTEST_MEMORYCHECK_COMMAND_OPTIONS "${CTEST_MEMORYCHECK_COMMAND_OPTIONS}")
 
 ctest_start(Experimental)
 
