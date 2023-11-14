@@ -22,5 +22,7 @@ add_compile_definitions(
 
 # fixes errors about needing -fPIE
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  include(CheckPIESupported)
+  check_pie_supported()
   set(CMAKE_POSITION_INDEPENDENT_CODE true)
 endif()
