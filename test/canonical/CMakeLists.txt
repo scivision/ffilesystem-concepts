@@ -1,8 +1,28 @@
 set_property(DIRECTORY PROPERTY LABELS "canonical")
 
-# --- canonical
-set(langs C CXX)
+include(CheckCXXSymbolExists)
 
+check_cxx_symbol_exists(__cpp_lib_starts_ends_with "string" HAVE_STRING_START_WITH)
+
+# --- C
+
+add_library(canonical_c ${PROJECT_SOURCE_DIR}/src/canonical/canonical.c
+$<$<BOOL:${WIN32}>:${PROJECT_SOURCE_DIR}/src/canonical/windows_read_symlink.c>
+)
+target_include_directories(canonical_c PUBLIC ${PROJECT_SOURCE_DIR}/src/canonical/)
+
+# --- C++
+
+add_library(windows_symlink OBJECT ${PROJECT_SOURCE_DIR}/src/canonical/windows_read_symlink.cpp)
+target_include_directories(windows_symlink INTERFACE ${PROJECT_SOURCE_DIR}/src/canonical/)
+
+add_library(canonical_cpp ${PROJECT_SOURCE_DIR}/src/canonical/canonical.cpp)
+target_include_directories(canonical_cpp INTERFACE ${PROJECT_SOURCE_DIR}/src/canonical/)
+target_link_libraries(canonical_cpp PRIVATE windows_symlink)
+
+
+# --- tests
+set(langs C CXX)
 
 add_executable(test_canonical_C test_canonical.c)
 target_link_libraries(test_canonical_C PRIVATE canonical_c)

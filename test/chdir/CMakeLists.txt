@@ -2,6 +2,10 @@ set_property(DIRECTORY PROPERTY LABELS "chdir")
 
 # PASS_REGULAR_EXPRESSION too fragile for path separate, Cygwin, WSL, etc.
 
+add_library(chdir_cpp OBJECT ${PROJECT_SOURCE_DIR}/src/chdir/chdir.cpp)
+target_include_directories(chdir_cpp PUBLIC ${PROJECT_SOURCE_DIR}/src/chdir)
+target_link_libraries(chdir_cpp PRIVATE ffilesystem)
+
 # -- C
 add_executable(chdir_c chdir.c)
 add_test(NAME chdir_c COMMAND chdir_c ${CMAKE_CURRENT_SOURCE_DIR})

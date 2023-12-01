@@ -1,5 +1,9 @@
 set_property(DIRECTORY PROPERTY LABELS "mkdtemp")
 
+add_library(mkdtemp OBJECT ${PROJECT_SOURCE_DIR}/src/mkdtemp/mkdtemp.cpp)
+target_include_directories(mkdtemp PUBLIC ${PROJECT_SOURCE_DIR}/src/mkdtemp)
+target_link_libraries(mkdtemp PRIVATE ffilesystem)
+
 add_executable(test_mkdtemp_cpp test_mkdtemp.cpp)
 target_link_libraries(test_mkdtemp_cpp PRIVATE mkdtemp)
 add_test(NAME mkdtempCpp COMMAND test_mkdtemp_cpp)
