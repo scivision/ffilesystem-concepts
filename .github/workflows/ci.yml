@@ -23,7 +23,7 @@ jobs:
 
     strategy:
       matrix:
-        gcc-version: [9, 10, 11, 12]
+        gcc-version: [9, 10, 11, 12, 13]
 
     env:
       CC: gcc-${{ matrix.gcc-version }}
@@ -92,12 +92,12 @@ jobs:
 
     strategy:
       matrix:
-        compiler: [ {cpp: g++-12, c: gcc-12}, {cpp: clang++, c: clang} ]
+        compiler: [ {cpp: g++-13, c: gcc-13}, {cpp: clang++, c: clang} ]
 
     env:
       CC: ${{ matrix.compiler.c }}
       CXX: ${{ matrix.compiler.cpp }}
-      FC: gfortran-12
+      FC: gfortran-13
 
     steps:
     - run: brew install ninja
