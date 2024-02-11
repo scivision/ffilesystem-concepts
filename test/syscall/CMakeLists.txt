@@ -8,8 +8,14 @@ target_include_directories(exec_CXX INTERFACE ${PROJECT_SOURCE_DIR}/src/syscall)
 
 
 if(WIN32)
-  add_library(create_process ${PROJECT_SOURCE_DIR}/src/syscall/CreateProcess.c)
+  add_library(create_process ${PROJECT_SOURCE_DIR}/src/syscall/CreateProcess.cpp)
   target_include_directories(create_process PUBLIC ${PROJECT_SOURCE_DIR}/src/syscall)
+
+  add_executable(test_create_process test_create_process.cpp)
+  target_link_libraries(test_create_process PRIVATE create_process)
+
+  add_test(NAME CreateProcess COMMAND test_create_process)
+  set_property(TEST CreateProcess PROPERTY LABELS "CXX")
 endif()
 
 add_executable(test_exec_C test_exec.c)
@@ -21,11 +27,3 @@ add_executable(test_exec_CXX test_exec.cpp)
 target_link_libraries(test_exec_CXX PRIVATE exec_CXX)
 add_test(NAME ExecCXX COMMAND test_exec_CXX)
 set_property(TEST ExecCXX PROPERTY LABELS "CXX")
-
-if(WIN32)
-add_executable(test_create_process test_create_process.c)
-target_link_libraries(test_create_process PRIVATE create_process)
-
-add_test(NAME CreateProcess COMMAND test_create_process)
-set_property(TEST CreateProcess PROPERTY LABELS "C")
-endif()

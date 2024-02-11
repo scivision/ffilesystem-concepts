@@ -15,7 +15,7 @@ std::string fs_win32_read_symlink(const std::string path)
   // https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilea
   // https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfinalpathnamebyhandlea
 
-  HANDLE h = CreateFileA(path.c_str(), 0, 0, NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, NULL);
+  HANDLE h = CreateFileA(path.c_str(), 0, 0, nullptr, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, nullptr);
   if(h == INVALID_HANDLE_VALUE)
     throw std::runtime_error("ERROR:win32_read_symlink:CreateFile open " + path);
 

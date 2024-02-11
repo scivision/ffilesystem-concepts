@@ -3,7 +3,8 @@
 #include "execute_process.h"
 
 
-int main(){
-  execute_process("whoami");
+int main(void){
+  create_process("whoami");
+
   return EXIT_SUCCESS;
 }
