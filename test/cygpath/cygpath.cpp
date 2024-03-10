@@ -3,6 +3,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <cerrno>
+#include <memory>
 
 #include <sys/cygwin.h>
 
@@ -15,16 +16,13 @@ std::string to_cygpath(std::string_view winpath){
     return {};
   }
 
-  char *cygpath = (char *) malloc(L);
-  if(cygwin_conv_path(CCP_WIN_A_TO_POSIX, winpath.data(), cygpath, L)){
+  auto buf = std::make_unique<char[]>(L);
+  if(cygwin_conv_path(CCP_WIN_A_TO_POSIX, winpath.data(), buf.get(), L)){
     std::cerr << "cygwin_conv_path failed: " << std::to_string(errno) << "\n";
-    free(cygpath);
     return {};
   }
 
-  std::string result(cygpath);
-  free(cygpath);
-  return result;
+  return std::string(buf.get());
 
 }
 
@@ -37,16 +35,13 @@ std::string to_winpath(std::string_view cygpath){
     return {};
   }
 
-  char *winpath = (char *) malloc(L);
-  if(cygwin_conv_path(CCP_POSIX_TO_WIN_A, cygpath.data(), winpath, L)){
+  auto buf = std::make_unique<char[]>(L);
+  if(cygwin_conv_path(CCP_POSIX_TO_WIN_A, cygpath.data(), buf.get(), L)){
     std::cerr << "cygwin_conv_path failed: " << std::to_string(errno) << "\n";
-    free(winpath);
     return {};
   }
 
-  std::string result(winpath);
-  free(winpath);
-  return result;
+  return std::string(buf.get());
 }
 
 
