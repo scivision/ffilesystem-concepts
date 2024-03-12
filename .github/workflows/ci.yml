@@ -3,6 +3,7 @@ name: ci
 env:
   HOMEBREW_NO_INSTALL_CLEANUP: 1
   CTEST_NO_TESTS_ACTION: error
+  CTEST_PARALLEL_LEVEL: 4
 
 on:
   push:
@@ -86,8 +87,8 @@ jobs:
 
 
   mac:
-    runs-on: macos-latest
-    needs: linux-clang
+    # macos-14 uses ARM64 hardware
+    runs-on: macos-14
     timeout-minutes: 10
 
     strategy:
