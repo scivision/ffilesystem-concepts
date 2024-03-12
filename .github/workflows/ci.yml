@@ -105,6 +105,10 @@ jobs:
 
     - uses: actions/checkout@v4
 
+    - run: sudo xcode-select --switch /Applications/Xcode_15.1.app
+    # https://docs.brew.sh/Xcode
+    # https://github.com/Homebrew/brew/blob/HEAD/Library/Homebrew/os/mac/xcode.rb#L20
+
     - name: Debug workflow
       run: cmake --workflow --preset debug
 
