@@ -22,6 +22,8 @@ set_property(TEST chdirCpp PROPERTY LABELS "CXX")
 if(fortran)
   add_executable(test_chdir_fortran chdir.f90)
   target_link_libraries(test_chdir_fortran PRIVATE chdir_cpp)
+  set_property(TARGET test_chdir_fortran PROPERTY LINKER_LANGUAGE Fortran)
+  # Intel/NVHPC needs linker_language fortran else error "undefined reference to `main'"
 
   add_test(NAME chdirFortran COMMAND test_chdir_fortran ${CMAKE_CURRENT_SOURCE_DIR})
 endif()
