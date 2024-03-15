@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15...3.28)
+cmake_minimum_required(VERSION 3.15...3.29)
 
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
   message(FATAL_ERROR "Please use out of source build like:
@@ -40,7 +40,8 @@ endif()
 add_subdirectory(src)
 
 set(satest canonical chdir copytree file_parts file_types home_dir
-    is_exe iterdir lib_dir mkdtemp space_avail symlink syscall path_type)
+    is_exe iterdir lib_dir mkdtemp space_avail symlink syscall path_type
+    strcpy_s)
 if(WIN32)
   list(APPEND satest case_sensitive maximums short_path unc)
 elseif(CYGWIN)
