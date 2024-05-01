@@ -4,7 +4,8 @@
 #include <memory>
 
 #ifdef _WIN32
-#include <userenv.h>
+#include <userenv.h> // GetUserProfileDirectoryA
+#include <shlobj.h> // SHGetKnownFolderPath
 #else
 #include <sys/types.h>
 #include <pwd.h>
@@ -12,7 +13,45 @@
 #include <unistd.h>
 #endif
 
-std::string fs_homedir() {
+
+#ifdef _WIN32
+std::string windows_userenv_homedir()
+{
+  // works on MSYS2, MSVC, oneAPI.
+  // must link UserEnv;Advapi32
+  DWORD L = MAX_PATH;
+  auto buf = std::make_unique<char[]>(L);
+  // process with query permission
+  HANDLE hToken = nullptr;
+  bool ok = OpenProcessToken( GetCurrentProcess(), TOKEN_QUERY, &hToken) != 0 &&
+            GetUserProfileDirectoryA(hToken, buf.get(), &L);
+
+  CloseHandle(hToken);
+  if (!ok)
+    throw std::runtime_error("GetUserProfileDirectory: "  + std::system_category().message(GetLastError()));
+
+  return std::string(buf.get());
+}
+
+
+std::string shlobj_homedir()
+{
+  #pragma warning( disable : 4244 )
+  // works on MSYS2, MSVC, oneAPI.
+  // must link Shell32
+  wchar_t* buf = nullptr;
+  if (SHGetKnownFolderPath(FOLDERID_Profile, 0, nullptr, &buf) != S_OK)
+    throw std::runtime_error("SHGetFolderPath: "  + std::system_category().message(GetLastError()));
+
+  // NOTE: lossy conversion, only works for ASCII
+  std::wstring w(buf);
+  CoTaskMemFree(static_cast<void*>(buf));
+  return std::string(w.begin(), w.end());
+}
+#endif
+
+std::string fs_homedir()
+{
 
   auto r = std::getenv(
 #ifdef _WIN32
@@ -30,28 +69,14 @@ std::string fs_homedir() {
   std::cout << "get_homedir: using fallback\n";
   std::string homedir;
 #ifdef _WIN32
-  // works on MSYS2, MSVC, oneAPI.
-  DWORD L = MAX_PATH;
-  auto buf = std::make_unique<char[]>(L);
-  // process with query permission
-  HANDLE hToken = nullptr;
-  bool ok = OpenProcessToken( GetCurrentProcess(), TOKEN_QUERY, &hToken) != 0 &&
-            GetUserProfileDirectoryA(hToken, buf.get(), &L);
-
-  CloseHandle(hToken);
-  if (!ok)
-    throw std::runtime_error("GetUserProfileDirectory: "  + std::system_category().message(GetLastError()));
-
-  homedir = std::string(buf.get());
+  return shlobj_homedir();
 #else
-  const char *h = getpwuid(geteuid())->pw_dir;
-  if (!h)
-    throw std::runtime_error("getpwuid: "  + std::system_category().message(errno));
-  homedir = std::string(h);
+  if (const char *h = getpwuid(geteuid())->pw_dir; h)
+    return std::string(h);
+
+  throw std::runtime_error("getpwuid: "  + std::system_category().message(errno));
 #endif
 
-  std::cout << "get_homedir: used fallback ";
-  return homedir;
 }
 
 int main() {
