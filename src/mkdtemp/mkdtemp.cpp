@@ -15,6 +15,7 @@ namespace fs = std::filesystem;
 #include "mkdtemp.h"
 #include "ffilesystem.h"
 
+#ifdef __cpp_deduction_guides
 // CTAD C++17 random string generator
 // https://stackoverflow.com/a/444614
 
@@ -40,6 +41,7 @@ auto generate_random_alphanumeric_string(std::size_t len) -> std::string {
     std::generate_n(begin(result), len, [&]() { return chars[dist(rng)]; });
     return result;
 }
+#endif
 
 size_t fs_make_tempdir(char* result, size_t buffer_size){
   // Fortran / C / C++ interface function
@@ -53,7 +55,7 @@ size_t fs_make_tempdir(char* result, size_t buffer_size){
 std::string fs_make_tempdir(std::string prefix)
 {
   // make unique temporary directory starting with prefix
-
+#ifdef __cpp_deduction_guides
   size_t Lname = 16;  // arbitrary length for random string
 
   fs::path tdir = fs::temp_directory_path();
@@ -67,4 +69,7 @@ std::string fs_make_tempdir(std::string prefix)
     throw fs::filesystem_error("fs_make_tempdir:mkdir: could not create temporary directory", t, std::error_code(errno, std::system_category()));
 
   return t.generic_string();
+#else
+  throw std::runtime_error("fs_make_tempdir: requires C++17 CTAD");
+#endif
 }
