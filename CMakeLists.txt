@@ -6,11 +6,17 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
 endif()
 
 project(FilesystemConcepts LANGUAGES C CXX)
+
 enable_testing()
 
-option(fortran "use Fortran" ON)
-if(fortran)
+include(CheckLanguage)
+
+check_language(Fortran)
+if(CMAKE_Fortran_COMPILER)
   enable_language(Fortran)
+  set(fortran on)
+else()
+  set(fortran off)
 endif()
 
 set(CMAKE_C_STANDARD 99)
@@ -40,7 +46,8 @@ endif()
 add_subdirectory(src)
 
 set(satest canonical chdir copytree file_parts file_types home_dir
-    is_exe iterdir lib_dir mkdtemp space_avail symlink syscall path_type
+    is_exe iterdir lib_dir mkdtemp partition
+    space_avail symlink syscall path_type
     strcpy_s)
 if(WIN32)
   list(APPEND satest case_sensitive maximums short_path unc)

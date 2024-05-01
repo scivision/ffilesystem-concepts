@@ -15,11 +15,15 @@
 
 void get_cwd(char* cwd){
 
+  if(
 #ifdef _MSC_VER
-  if(_getcwd(cwd, MAXP)) return;
+   _getcwd
 #else
-  if(getcwd(cwd, MAXP)) return;
+    getcwd
 #endif
+    (cwd, MAXP))
+      return;
+
   fprintf(stderr, "ERROR: getcwd: %s\n", strerror(errno));
   exit(EXIT_FAILURE);
 }
