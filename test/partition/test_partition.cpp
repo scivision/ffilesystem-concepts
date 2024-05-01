@@ -5,7 +5,7 @@
 #elif defined(__APPLE__)
 #include <sys/param.h>
 #include <sys/mount.h>
-#elif defined(_WIN32)
+#elif defined(_WIN32) || defined(__CYGWIN__)
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #endif
@@ -21,7 +21,7 @@
 std::string filesystem_type(std::string_view path) {
   // return string name of filesystem type if known
 
-#if defined(_WIN32)
+#if defined(_WIN32) || defined(__CYGWIN__)
   auto buf = std::make_unique<char[]>(MAX_PATH+1);
 
   if(GetVolumeInformationA(path.data(), nullptr, 0, nullptr, nullptr, nullptr, buf.get(), sizeof(buf)))
