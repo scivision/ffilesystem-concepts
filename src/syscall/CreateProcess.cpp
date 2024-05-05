@@ -2,8 +2,7 @@
 
 #include <stdexcept>
 #include <string>
-#include <cstring>
-#include <memory>
+#include <vector>
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -25,11 +24,10 @@ void create_process(std::string_view cmd){
   // https://learn.microsoft.com/en-us/troubleshoot/windows-client/shell-experience/command-line-string-limitation
   // 8191 max command line length
   std::string c = std::string(comspec) + " /c " + std::string(cmd);
-  auto buf = std::make_unique<char[]>(8191);
-  std::strcpy(buf.get(), c.data());
+  std::vector<char> buf(c.begin(), c.end());
 
   if (!CreateProcessA(comspec, //  COMSPEC
-    buf.get(),    // Command line
+    buf.data(),    // Command line
     nullptr,   // Process handle not inheritable
     nullptr,   // Thread handle not inheritable
     FALSE,  // Set handle inheritance to FALSE

@@ -3,7 +3,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <cerrno>
-#include <memory>
+#include <vector>
 
 #include <sys/cygwin.h>
 
@@ -16,13 +16,13 @@ std::string to_cygpath(std::string_view winpath){
     return {};
   }
 
-  auto buf = std::make_unique<char[]>(L);
-  if(cygwin_conv_path(CCP_WIN_A_TO_POSIX, winpath.data(), buf.get(), L)){
+  std::vector<char> buf(L);
+  if(cygwin_conv_path(CCP_WIN_A_TO_POSIX, winpath.data(), buf.data(), L)){
     std::cerr << "cygwin_conv_path failed: " << std::to_string(errno) << "\n";
     return {};
   }
 
-  return std::string(buf.get());
+  return std::string(buf.data());
 
 }
 
@@ -35,13 +35,13 @@ std::string to_winpath(std::string_view cygpath){
     return {};
   }
 
-  auto buf = std::make_unique<char[]>(L);
-  if(cygwin_conv_path(CCP_POSIX_TO_WIN_A, cygpath.data(), buf.get(), L)){
+  std::vector<char> buf(L);
+  if(cygwin_conv_path(CCP_POSIX_TO_WIN_A, cygpath.data(), buf.data(), L)){
     std::cerr << "cygwin_conv_path failed: " << std::to_string(errno) << "\n";
     return {};
   }
 
-  return std::string(buf.get());
+  return std::string(buf.data());
 }
 
 

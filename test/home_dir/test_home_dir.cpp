@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <cstring>
-#include <memory>
+#include <vector>
 
 #ifdef _WIN32
 #include <userenv.h> // GetUserProfileDirectoryA
@@ -20,17 +20,17 @@ std::string windows_userenv_homedir()
   // works on MSYS2, MSVC, oneAPI.
   // must link UserEnv;Advapi32
   DWORD L = MAX_PATH;
-  auto buf = std::make_unique<char[]>(L);
+  std::vector<char> buf(L);
   // process with query permission
   HANDLE hToken = nullptr;
   bool ok = OpenProcessToken( GetCurrentProcess(), TOKEN_QUERY, &hToken) != 0 &&
-            GetUserProfileDirectoryA(hToken, buf.get(), &L);
+            GetUserProfileDirectoryA(hToken, buf.data(), &L);
 
   CloseHandle(hToken);
   if (!ok)
     throw std::runtime_error("GetUserProfileDirectory: "  + std::system_category().message(GetLastError()));
 
-  return std::string(buf.get());
+  return std::string(buf.data());
 }
 
 

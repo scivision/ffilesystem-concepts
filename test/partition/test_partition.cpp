@@ -10,10 +10,11 @@
 #include <windows.h>
 #endif
 
-#include <memory>
+#include <vector>
 #include <iostream>
 #include <cstdlib>
 #include <string>
+#include <system_error>  // std::system_category
 
 #include <filesystem>
 
@@ -22,10 +23,13 @@ std::string filesystem_type(std::string_view path) {
   // return string name of filesystem type if known
 
 #if defined(_WIN32) || defined(__CYGWIN__)
-  auto buf = std::make_unique<char[]>(MAX_PATH+1);
+  // necessary to avoid nonsense error messages
+  if(path.empty())  [[unlikely]]
+    return {};
 
-  if(GetVolumeInformationA(path.data(), nullptr, 0, nullptr, nullptr, nullptr, buf.get(), sizeof(buf)))
-    return std::string(buf.get());
+  if(std::vector<char> buf(MAX_PATH+1);
+      GetVolumeInformationA(path.data(), nullptr, 0, nullptr, nullptr, nullptr, buf.data(), buf.size()))  [[likely]]
+    return std::string(buf.data());
 
   std::cerr << "GetVolumeInformationA failed: " << std::system_category().message(GetLastError()) << std::endl;
   return std::string();
@@ -50,8 +54,14 @@ std::string filesystem_type(std::string_view path) {
       return "squashfs";
     case TMPFS_MAGIC:
       return "tmpfs";
+    case V9FS_MAGIC:
+      return "v9fs";
+    // used for WSL
+    // https://devblogs.microsoft.com/commandline/whats-new-for-wsl-in-windows-10-version-1903/
+#ifdef XFS_SUPER_MAGIC
     case XFS_SUPER_MAGIC:
       return "xfs";
+#endif
     default:
       return std::to_string(s.f_type);
   }
@@ -72,7 +82,9 @@ int main(int argc, char* argv[]) {
 
   if(!path.is_absolute())
     path = std::filesystem::canonical(path);
+#ifdef _WIN32
   path = path.root_path();
+#endif
 
   std::cout << "filesystem: " + path.string() + " " + filesystem_type(path.string()) + "\n";
 

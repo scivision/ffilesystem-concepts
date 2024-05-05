@@ -52,6 +52,14 @@ then a priori know the relative path to the data file(s).
 
 Determine the [free space available on a drive](./test/space_avail/).
 
+## Filesystem type
+
+Determine the
+[filesystem type](./test/partition/)
+of a drive or partition.
+Note that WSL uses
+[v9fs](https://devblogs.microsoft.com/commandline/whats-new-for-wsl-in-windows-10-version-1903/).
+
 ## Windows short path
 
 For Windows only, find the short path (8.3) from a long filename and [vice versa](./test/short_path/).
