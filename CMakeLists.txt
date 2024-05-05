@@ -45,10 +45,12 @@ endif()
 # utilities
 add_subdirectory(src)
 
-set(satest canonical chdir copytree file_parts file_types home_dir
-    is_exe iterdir lib_dir mkdtemp partition
-    space_avail symlink syscall path_type
-    strcpy_s)
+set(satest canonical chdir copytree
+  file_parts file_types filesystem_type
+  home_dir
+  is_exe iterdir lib_dir mkdtemp
+  space_avail symlink syscall path_type
+  strcpy_s)
 if(WIN32)
   list(APPEND satest case_sensitive maximums short_path unc)
 elseif(CYGWIN)

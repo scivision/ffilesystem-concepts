@@ -55,7 +55,7 @@ Determine the [free space available on a drive](./test/space_avail/).
 ## Filesystem type
 
 Determine the
-[filesystem type](./test/partition/)
+[filesystem type](./test/filesystem_type/)
 of a drive or partition.
 Note that WSL uses
 [v9fs](https://devblogs.microsoft.com/commandline/whats-new-for-wsl-in-windows-10-version-1903/).

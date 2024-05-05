@@ -80,6 +80,6 @@ std::string fs_homedir()
 }
 
 int main() {
-  std::cout << fs_homedir() << std::endl;
+  std::cout << fs_homedir() << "\n";
   return 0;
 }
