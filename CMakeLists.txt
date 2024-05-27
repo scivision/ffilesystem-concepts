@@ -12,21 +12,16 @@ project(FilesystemConcepts LANGUAGES C CXX)
 
 enable_testing()
 
-include(CheckLanguage)
-
-check_language(Fortran)
-if(CMAKE_Fortran_COMPILER)
-  enable_language(Fortran)
-  set(fortran on)
-else()
-  set(fortran off)
-endif()
-
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_CXX_STANDARD 20)
 
-include(cmake/compilers.cmake)
 include(options.cmake)
+if(fortran)
+  enable_language(Fortran)
+endif()
+
+
+include(cmake/compilers.cmake)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
