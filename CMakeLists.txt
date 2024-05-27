@@ -1,9 +1,12 @@
-cmake_minimum_required(VERSION 3.15...3.29)
+cmake_minimum_required(VERSION 3.15...3.30)
 
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
   message(FATAL_ERROR "Please use out of source build like:
   cmake -Bbuild")
 endif()
+
+set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
+# This project isn't using C++ modules; avoid bugs in module scanning CMake 3.28, 3.29 with GCC 14.1 on WIndows
 
 project(FilesystemConcepts LANGUAGES C CXX)
 
@@ -21,11 +24,6 @@ endif()
 
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_CXX_STANDARD 20)
-
-if(NOT CMAKE_Fortran_COMPILER_ID STREQUAL "NVHPC")
-# bug in CMake for NVHPC "-Werror all-warnings" not valid flag
-  set(CMAKE_COMPILE_WARNING_AS_ERROR ON)
-endif()
 
 include(cmake/compilers.cmake)
 include(options.cmake)
