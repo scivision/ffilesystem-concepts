@@ -1,0 +1,25 @@
+runs:
+
+  using: "composite"
+
+  steps:
+
+  - name: install Ninja (Linux)
+    if: runner.os == 'Linux'
+    shell: bash
+    run: |
+      sudo apt update
+      sudo apt install --no-install-recommends ninja-build
+
+  - name: install Ninja (macOS)
+    if: runner.os == 'macOS'
+    shell: bash
+    run: brew install ninja
+
+  - name: Debug workflow
+    shell: bash
+    run: cmake --workflow --preset debug
+
+  - name: Release workflow
+    shell: bash
+    run: cmake --workflow --preset release
