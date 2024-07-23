@@ -4,7 +4,7 @@
 
 namespace fs = std::filesystem;
 
-bool fs_is_exe(std::string path)
+bool fs_is_exe(std::string_view path)
 {
 
   fs::path p(path);

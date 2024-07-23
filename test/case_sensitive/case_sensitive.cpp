@@ -13,19 +13,19 @@ namespace fs = std::filesystem;
 // Discussion of general issues across operating systems.
 // https://github.com/dotnet/runtime/issues/14321
 
-bool is_case_sensitive(std::string drive){
+bool is_case_sensitive(std::string_view drive){
 // https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getvolumeinformationa
 
   if (drive.empty())
     throw std::runtime_error("No drive specified.");
 
   if (!fs::exists(drive))
-    throw std::runtime_error(drive + " does not exist.");
+    throw std::runtime_error("drive does not exist.");
 
   DWORD lpFileSystemFlags=0;
 
-  if(!GetVolumeInformationA(drive.c_str(), 0, 0, 0, 0, &lpFileSystemFlags, 0, 0))
-    throw std::runtime_error("GetVolumeInformation: " + drive + " " + std::system_category().message(GetLastError()));
+  if(!GetVolumeInformationA(drive.data(), 0, 0, 0, 0, &lpFileSystemFlags, 0, 0))
+    throw std::runtime_error("GetVolumeInformation: " + std::system_category().message(GetLastError()));
 
   return bool(FILE_CASE_SENSITIVE_SEARCH & lpFileSystemFlags);
 }

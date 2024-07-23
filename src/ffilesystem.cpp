@@ -18,7 +18,7 @@ size_t fs_char2char(const char* in, char* out, size_t buffer_size)
 }
 
 
-size_t fs_str2char(std::string in, char* out, size_t buffer_size)
+size_t fs_str2char(std::string_view in, char* out, size_t buffer_size)
 {
   // string to char*, for Fortran interface
   if(in.length() >= buffer_size){
