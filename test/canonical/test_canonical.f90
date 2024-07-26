@@ -23,8 +23,6 @@ integer :: L, ierr
 
 valgrind : block
 
-valgrind : block
-
 call get_command_argument(0, length=L, status=ierr)
 if(ierr /= 0) error stop "ERROR: get_command_argument(0) failed"
 allocate(character(L) :: buf)
@@ -35,6 +33,8 @@ call get_command_argument(0, buf)
 !! ifort/ifx (Windows or Linux), nvfortran, flang: relative path
 
 resolved = canonical(trim(buf) // C_NULL_CHAR)
+if(len_trim(resolved) == 0) error stop "ERROR: canonical failed: empty result"
+
 print '(A)', "canonical(argv[0]) = " // trim(resolved)
 
 end block valgrind

@@ -20,13 +20,16 @@ end interface
 integer, parameter :: MAX_PATH = 8191
 
 character(MAX_PATH) :: buf
+character(:), allocatable :: cwd
 logical :: ok
 
 if(command_argument_count() < 1) error stop "please specify path to chdir"
 
 call get_command_argument(1, buf)
 
-print '(a)', 'current working directory: ', get_cwd()
+cwd = get_cwd()
+if(len_trim(cwd) == 0) error stop "get_cwd failed"
+print '(a)', 'current working directory: '// cwd
 
 ok = fs_chdir(trim(buf) // C_NULL_CHAR)
 
