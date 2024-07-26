@@ -2,6 +2,8 @@ module finder
 
 use, intrinsic :: iso_fortran_env, only : stderr=>error_unit
 
+implicit none
+
 contains
 
 function get_filename(path, name)
@@ -23,8 +25,6 @@ integer :: i
 
 integer, parameter :: MAX_PATH = 8191
 
-allocate(character(MAX_PATH) :: get_filename)
-
 get_filename = path
 !! avoid undefined return
 
@@ -43,7 +43,6 @@ endif
 
 if(is_file(get_filename)) return
 
-allocate(character(get_max_path()) :: path1)
 path1 = get_filename
 
 do i = 1, size(suff)

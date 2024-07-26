@@ -42,7 +42,6 @@ character(kind=c_char, len=:), allocatable :: cbuf
 integer(C_SIZE_T) :: N
 allocate(character(MAX_PATH) :: cbuf)
 N = fs_get_cwd(cbuf, len(cbuf, kind=C_SIZE_T))
-allocate(character(N) :: get_cwd)
 get_cwd = cbuf(:N)
 end function
 

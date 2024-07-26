@@ -31,7 +31,6 @@ character(kind=c_char, len=:), allocatable :: cbuf
 integer(C_SIZE_T) :: N
 allocate(character(MAX_PATH) :: cbuf)
 N = fs_make_tempdir(cbuf, len(cbuf, kind=C_SIZE_T))
-allocate(character(N) :: r)
 r = cbuf(:N)
 end function
 

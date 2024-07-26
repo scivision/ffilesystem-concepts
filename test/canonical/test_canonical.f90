@@ -17,13 +17,18 @@ end function
 end interface
 
 character(:), allocatable :: resolved
-character(4096, kind=C_CHAR) :: buf
+character(:, kind=C_CHAR), allocatable :: buf
 
 integer :: L, ierr
 
-call get_command_argument(0, buf, length=L, status=ierr)
+valgrind : block
+
+valgrind : block
+
+call get_command_argument(0, length=L, status=ierr)
 if(ierr /= 0) error stop "ERROR: get_command_argument(0) failed"
-if(L < 2) error stop "ERROR: get_command_argument(0) returned L < 2: " // trim(buf)
+allocate(character(L) :: buf)
+call get_command_argument(0, buf)
 
 !! gfortran (Windows): full path
 !! gfortran (Linux): relative path
@@ -32,8 +37,7 @@ if(L < 2) error stop "ERROR: get_command_argument(0) returned L < 2: " // trim(b
 resolved = canonical(trim(buf) // C_NULL_CHAR)
 print '(A)', "canonical(argv[0]) = " // trim(resolved)
 
-deallocate(resolved)
-!! for valgrind
+end block valgrind
 
 contains
 
@@ -52,7 +56,6 @@ allocate(character(MAX) :: cbuf)
 N = fs_realpath(trim(path) // C_NULL_CHAR, cbuf, len(cbuf, kind=C_SIZE_T))
 if (N < 1) error stop "ERROR: fs_realpath failed"
 
-allocate(character(N) :: canonical)
 canonical = cbuf(:N)
 
 print '(a)', "OK: Fortran canonical " // canonical
