@@ -78,9 +78,6 @@ jobs:
     needs: linux-new
     timeout-minutes: 10
 
-    env:
-      FC: gfortran-13
-
     steps:
     - name: install valgrind
       run: sudo apt install --no-install-recommends valgrind
@@ -102,7 +99,7 @@ jobs:
     env:
       CC: ${{ matrix.compiler.c }}
       CXX: ${{ matrix.compiler.cpp }}
-      FC: gfortran-13
+      FC: gfortran-14
 
     steps:
     - uses: actions/checkout@v4
