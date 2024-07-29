@@ -37,6 +37,9 @@ if(len_trim(resolved) == 0) error stop "ERROR: canonical failed: empty result"
 
 print '(A)', "canonical(argv[0]) = " // trim(resolved)
 
+deallocate(resolved)
+deallocate(buf)
+
 end block valgrind
 
 contains

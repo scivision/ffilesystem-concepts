@@ -19,12 +19,16 @@ end interface
 
 integer, parameter :: MAX_PATH = 8191
 
-character(MAX_PATH) :: buf
-character(:), allocatable :: cwd
+character(:), allocatable :: cwd, buf
 logical :: ok
+integer :: L, i
 
 if(command_argument_count() < 1) error stop "please specify path to chdir"
 
+valgrind : block
+call get_command_argument(1, length=L, status=i)
+if(i /= 0) error stop "get_command_argument(1) failed"
+allocate(character(L) :: buf)
 call get_command_argument(1, buf)
 
 cwd = get_cwd()
@@ -35,7 +39,12 @@ ok = fs_chdir(trim(buf) // C_NULL_CHAR)
 
 if (.not. ok) error stop "chdir failed"
 
-print '(a)', 'New working directory: ', get_cwd()
+print '(a)', 'New working directory: ' // get_cwd()
+
+deallocate(cwd)
+deallocate(buf)
+
+end block valgrind
 
 contains
 
