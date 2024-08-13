@@ -93,8 +93,8 @@ jobs:
 
     strategy:
       matrix:
-        compiler: [ {cpp: clang++, c: clang} ]
-    # {cpp: g++-13, c: gcc-13}, unstable on CI (good on real mac)
+        compiler: [ {cpp: clang++, c: clang},
+                    {cpp: g++-14, c: gcc-14} ]
 
     env:
       CC: ${{ matrix.compiler.c }}
