@@ -1,3 +1,8 @@
+// Find all files with name under path
+// Usage: test_find_file <filename> [search_path] [count]
+// filename: name of the file to find
+// search_path: path to search recursively under, default is current directory
+// count: maximum number of files to find, default is 0 (find all)
 #include <iostream>
 #include <filesystem>
 #include <cstdlib>
@@ -32,7 +37,7 @@ std::string p = ".";
 if (argc > 2)
     p = argv[2];
 
-size_t count = 1;
+size_t count = 0;
 if (argc > 3)
     count = std::stoi(argv[3]);
 
