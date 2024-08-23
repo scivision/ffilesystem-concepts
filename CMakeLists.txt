@@ -40,6 +40,7 @@ add_subdirectory(src)
 
 set(satest canonical chdir copytree
   file_parts file_types filesystem_type
+  find_file
   home_dir
   is_exe iterdir lib_dir mkdtemp
   memory

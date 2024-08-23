@@ -1,7 +1,7 @@
 #include <iostream>
 #include <filesystem>
 #include <cstdlib>
-#include <string>
+#include <string_view>
 
 namespace fs = std::filesystem;
 
@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
   _CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
 #endif
 
-  if (argc == 2 || (argc == 3 && std::string(argv[2]) != "-r")){
+  if (argc == 2 || (argc == 3 && std::string_view(argv[2]) != "-r")){
     std::cout << "std::filesystem::directory_iterator:\n";
     for (auto const& d : fs::directory_iterator{fs::path(argv[1])})
     {
