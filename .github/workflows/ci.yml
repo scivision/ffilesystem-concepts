@@ -80,7 +80,9 @@ jobs:
 
     steps:
     - name: install valgrind
-      run: sudo apt install --no-install-recommends valgrind
+      run: |
+        sudo apt update
+        sudo apt install --no-install-recommends valgrind
 
     - uses: actions/checkout@v4
 
