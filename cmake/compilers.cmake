@@ -20,10 +20,3 @@ endif()
 add_compile_definitions(
   "$<$<AND:$<COMPILE_LANGUAGE:C,CXX>,$<BOOL:${MSVC}>>:_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_WARNINGS>"
 )
-
-# fixes errors about needing -fPIE
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-  include(CheckPIESupported)
-  check_pie_supported()
-  set(CMAKE_POSITION_INDEPENDENT_CODE true)
-endif()
