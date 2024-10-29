@@ -61,14 +61,21 @@ statx_is_dir(std::string_view path)
 using IsDirFunc = bool(*)(std::string_view);
 
 void benchmark_is_dir(IsDirFunc is_dir_func, std::string_view func_name, std::string_view path, const size_t n) {
-  auto t0 = std::chrono::steady_clock::now();
-  for(size_t i = 0; i < n; ++i){
-      is_dir_func(path);
-  }
-  auto t1 = std::chrono::steady_clock::now();
+  auto t = std::chrono::duration<double>::max();
 
-  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
-  std::cout << n << " " << func_name << " is_dir(" << path << ") " << duration << " us\n";
+  for(size_t i = 0; i < n; ++i){
+    auto t0 = std::chrono::steady_clock::now();
+
+      is_dir_func(path);
+
+    auto t1 = std::chrono::steady_clock::now();
+    t = std::min(t, std::chrono::duration_cast<std::chrono::duration<double>>(t1 - t0));
+  }
+
+  std::chrono::nanoseconds ns = std::chrono::duration_cast<std::chrono::nanoseconds>(t);
+  double us = ns.count() / 1000.0;
+
+  std::cout << n << " " << func_name << " is_dir(" << path << ") " << us << " us\n";
 }
 
 int main(int argc, char** argv){
