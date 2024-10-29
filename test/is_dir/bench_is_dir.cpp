@@ -58,43 +58,29 @@ statx_is_dir(std::string_view path)
 }
 
 
-int main(int argc, char** argv){
+using IsDirFunc = bool(*)(std::string_view);
 
+void benchmark_is_dir(IsDirFunc is_dir_func, std::string_view func_name, std::string_view path, const size_t n) {
+  auto t0 = std::chrono::steady_clock::now();
+  for(size_t i = 0; i < n; ++i){
+      is_dir_func(path);
+  }
+  auto t1 = std::chrono::steady_clock::now();
+
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
+  std::cout << n << " " << func_name << " is_dir(" << path << ") " << duration << " us\n";
+}
+
+int main(int argc, char** argv){
   std::string path = argc > 1 ? argv[1] : ".";
   size_t n = argc > 2 ? std::atoi(argv[2]) : 1000;
 
-  auto t0 = std::chrono::steady_clock::now();
-    for(size_t i = 0; i < n; ++i){
-        fs_is_dir(path);
-    }
-  auto t1 = std::chrono::steady_clock::now();
-
-  auto tfs = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
-
-  std::cout << n << " <filesystem> is_dir(" << path << ") " << tfs << " us\n";
-
-  t0 = std::chrono::steady_clock::now();
-    for(size_t i = 0; i < n; ++i){
-        stat_is_dir(path);
-    }
-  t1 = std::chrono::steady_clock::now();
-
-  auto tstat = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
-
-  std::cout << n << " stat() is_dir(" << path << ") " << tstat << " us\n";
+  benchmark_is_dir(fs_is_dir, "<filesystem>", path, n);
+  benchmark_is_dir(stat_is_dir, "stat()", path, n);
 
 #ifdef STATX_MODE
-
-  t0 = std::chrono::steady_clock::now();
-    for(size_t i = 0; i < n; ++i){
-        statx_is_dir(path);
-    }
-  t1 = std::chrono::steady_clock::now();
-
-  auto tstatx = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
-
-  std::cout << n << " statx() is_dir(" << path << ") " << tstatx << " us\n";
+  benchmark_is_dir(statx_is_dir, "statx()", path, n);
 #endif
 
-return EXIT_SUCCESS;
+  return EXIT_SUCCESS;
 }
