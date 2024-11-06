@@ -1,20 +1,18 @@
-#include <cstdlib>
 #include <filesystem>
 
 #include "canonical.h"
 
-namespace fs = std::filesystem;
 
-std::string fs_realpath(const std::string path)
+std::string fs_realpath(std::string_view path)
 {
-  fs::path in(path);
+  const std::filesystem::path in(path);
 
-  bool exists = fs::exists(in);
+  const bool exists = std::filesystem::exists(in);
 
-  fs::path out = exists ? fs::canonical(in) : fs::weakly_canonical(in);
+  std::filesystem::path out = std::filesystem::weakly_canonical(in);
 #ifdef __MINGW32__
   if(exists)
-    out = fs::path(fs_win32_read_symlink(out.string()));
+    out = std::filesystem::path(fs_win32_read_symlink(out.string()));
 #endif
 
   return out.generic_string();

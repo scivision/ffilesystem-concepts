@@ -1,12 +1,12 @@
 #ifdef __cplusplus
 
-#include <string>
+#include <string_view>
 
 #ifdef _WIN32
-std::string fs_win32_read_symlink(const std::string);
+std::string fs_win32_read_symlink(std::string_view);
 #endif
 
-std::string fs_realpath(const std::string);
+std::string fs_realpath(std::string_view);
 
 extern "C" {
 #endif

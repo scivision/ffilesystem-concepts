@@ -2,9 +2,7 @@ set_property(DIRECTORY PROPERTY LABELS "canonical")
 
 # --- C
 
-add_library(canonical_c ${PROJECT_SOURCE_DIR}/src/canonical/canonical.c
-$<$<BOOL:${WIN32}>:${PROJECT_SOURCE_DIR}/src/canonical/windows_read_symlink.c>
-)
+add_library(canonical_c ${PROJECT_SOURCE_DIR}/src/canonical/canonical.c)
 target_include_directories(canonical_c PUBLIC ${PROJECT_SOURCE_DIR}/src/canonical/)
 
 # --- C++
