@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string_view>
 #include <filesystem>
 
 #include "fs_chdir.h"
@@ -29,7 +30,7 @@ bool fs_chdir(const char *path)
   return true;
 }
 
-void fs_chdir(const std::string& path)
+void fs_chdir(std::string_view path)
 {
   fs::current_path(path);
 }

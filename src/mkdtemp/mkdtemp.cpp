@@ -52,7 +52,7 @@ size_t fs_make_tempdir(char* result, size_t buffer_size){
 }
 
 
-std::string fs_make_tempdir(std::string prefix)
+std::string fs_make_tempdir(std::string_view prefix)
 {
   // make unique temporary directory starting with prefix
 #ifdef __cpp_deduction_guides
@@ -62,7 +62,7 @@ std::string fs_make_tempdir(std::string prefix)
 
   fs::path t;
   do {
-    t = (tdir / (prefix + generate_random_alphanumeric_string(Lname)));
+    t = (tdir / (std::string(prefix) + generate_random_alphanumeric_string(Lname)));
   } while (fs::is_directory(t));
 
   if (!fs::create_directory(t))

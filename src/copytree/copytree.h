@@ -1,4 +1,4 @@
-#include <string>
+#include <string_view>
 
-void copytree(const std::string source, const std::string dest, bool);
-void touch(const std::string);
+void copytree(std::string_view source, std::string_view dest, bool);
+void touch(std::string_view);

@@ -1,10 +1,11 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <string_view>
 
 namespace fs = std::filesystem;
 
-void copytree(const std::string source, const std::string dest, bool overwrite)
+void copytree(std::string_view source, std::string_view dest, bool overwrite)
 {
   // recursively copy files and directories
   auto opt = fs::copy_options::recursive;
@@ -21,7 +22,7 @@ void copytree(const std::string source, const std::string dest, bool overwrite)
   }
 }
 
-void touch(const std::string path)
+void touch(std::string_view path)
 {
   // create a file if it doesn't exist, or update the last write time if it does
   fs::path p(path);
