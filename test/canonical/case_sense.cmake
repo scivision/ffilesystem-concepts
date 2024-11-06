@@ -1,24 +1,21 @@
-if(DEFINED case_sensitive)
-  return()
+set(cased_name ${CMAKE_CURRENT_BINARY_DIR}/CaseSensitiveCheck)
+string(TOLOWER ${cased_name} lower_name)
+
+if(NOT EXISTS ${cased_name})
+  message(STATUS "touch file ${cased_name}")
+  file(TOUCH ${cased_name})
 endif()
 
-string(RANDOM LENGTH 8 ALPHABET "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ" actual_name)
-string(PREPEND actual_name ${CMAKE_CURRENT_BINARY_DIR}/cmake_)
-string(TOLOWER ${actual_name} Lname)
-# creating Lname this way deliberately forces the drive/root to be lower case,
-# which in general is not the case on Windows and macOS:
-# * Windows upper case drive letter
-# * macOS /Users/... some upper case letters
+file(REAL_PATH ${lower_name} actual_name)
 
-if(EXISTS ${actual_name})
-  set(case_sensitive false CACHE BOOL "case insensitive build filesystem")
-  message(STATUS "touch file ${Lname}")
-  file(TOUCH ${Lname})
+message(VERBOSE "Actual name: ${actual_name}  cased_name ${cased_name}")
+
+if(cased_name STREQUAL actual_name)
+  set(case_sensitive false)
 else()
-  set(case_sensitive true CACHE BOOL "case sensitive build filesystem")
+  set(case_sensitive true)
 endif()
 
-message(STATUS "case_sensitive=${case_sensitive}")
+cmake_path(GET actual_name ROOT_PATH root)
 
-set(actual_name ${actual_name} CACHE FILEPATH "actual path of file" FORCE)
-set(Lname ${Lname} CACHE FILEPATH "lower case form of file path" FORCE)
+message(STATUS "Case Sensitive filesystem ${root} ${case_sensitive}")

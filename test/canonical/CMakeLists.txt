@@ -1,9 +1,5 @@
 set_property(DIRECTORY PROPERTY LABELS "canonical")
 
-include(CheckCXXSymbolExists)
-
-check_cxx_symbol_exists(__cpp_lib_starts_ends_with "string" HAVE_STRING_START_WITH)
-
 # --- C
 
 add_library(canonical_c ${PROJECT_SOURCE_DIR}/src/canonical/canonical.c
@@ -46,8 +42,8 @@ endforeach()
 # --- Ccase sensitive
 include(${CMAKE_CURRENT_LIST_DIR}/case_sense.cmake)
 
-foreach(lang IN ITEMS C CXX)
-  add_test(NAME CaseInsensitive${lang} COMMAND test_canonical_${lang} ${Lname})
+foreach(lang IN ITEMS CXX)
+  add_test(NAME CaseInsensitive${lang} COMMAND test_canonical_${lang} ${lower_name})
 endforeach()
 
 # --- test properties

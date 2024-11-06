@@ -17,7 +17,7 @@ is a C++17 example of creating a temporary directory that works on Windows, Linu
 
 ## Canonical
 
-Creating [canonical](./test/canonical/) "Lname" as entirely the lower case version of "Uname" deliberately forces the drive/root to be lower case.
+Creating [canonical](./test/canonical/) "lower_name" as entirely the lower case version of "cased_name" deliberately forces the drive/root to be lower case.
 In general full paths on Windows and macOS have some uppercase character elements:
 
 * Windows: upper case drive letter
