@@ -18,10 +18,7 @@ target_link_libraries(canonical_cpp PRIVATE windows_symlink)
 
 
 # --- tests
-set(langs C CXX)
-
-add_executable(test_canonical_C test_canonical.c)
-target_link_libraries(test_canonical_C PRIVATE canonical_c)
+set(langs CXX)
 
 add_executable(test_canonical_CXX test_canonical.cpp)
 target_link_libraries(test_canonical_CXX PRIVATE canonical_cpp)
@@ -48,13 +45,10 @@ endforeach()
 
 # --- test properties
 
-set_property(TEST CanonicalNotFoundC PROPERTY DISABLED $<BOOL:${CYGWIN}>)
-
-set_property(TEST CaseInsensitiveC ResolveLinkC PROPERTY LABELS "C")
 set_property(TEST CaseInsensitiveCXX ResolveLinkCXX PROPERTY LABELS "CXX")
 
-set_property(TEST CaseInsensitiveC CaseInsensitiveCXX PROPERTY DISABLED ${case_sensitive})
-set_property(TEST ResolveLinkC ResolveLinkCXX PROPERTY PASS_REGULAR_EXPRESSION "CMakeLists.txt\n$")
+set_property(TEST CaseInsensitiveCXX PROPERTY DISABLED ${case_sensitive})
+set_property(TEST ResolveLinkCXX PROPERTY PASS_REGULAR_EXPRESSION "CMakeLists.txt\n$")
 
 if(WIN32 AND BUILD_SHARED_LIBS)
     get_property(test_names DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY TESTS)
