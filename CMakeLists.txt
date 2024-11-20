@@ -47,7 +47,9 @@ set(satest canonical chdir copytree
   iterdir lib_dir mkdtemp
   memory
   space_avail symlink syscall path_type
-  strcpy_s)
+  strcpy_s
+  wide
+  )
 if(WIN32)
   list(APPEND satest case_sensitive maximums short_path unc)
 elseif(CYGWIN)
