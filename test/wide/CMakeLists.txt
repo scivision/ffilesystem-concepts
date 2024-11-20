@@ -9,3 +9,14 @@ target_link_libraries(test_wide_cpp PRIVATE ffilesystem)
 add_test(NAME test_wide_cpp COMMAND test_wide_cpp)
 
 add_executable(print_wide_cpp print_wide.cpp)
+
+
+# wchar_t size (bytes): 4
+# English lengths: input, reference, output: 13 13 13
+# PASSED: wide English Hello, world!
+# Spanish lengths: input, reference, output: 13 14 14
+# PASSED: wide Spanish ¡Hola, mundo!
+# Chinese lengths: input, reference, output: 6 18 18
+# PASSED: wide Chinese 你好，世界！
+# Japanese lengths: input, reference, output: 9 27 27
+# PASSED: wide Japanese こんにちは、世界！
