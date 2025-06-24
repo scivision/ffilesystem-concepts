@@ -4,7 +4,6 @@ env:
   HOMEBREW_NO_INSTALL_CLEANUP: 1
   CTEST_NO_TESTS_ACTION: error
   CTEST_PARALLEL_LEVEL: 0
-  CMAKE_BUILD_PARALLEL_LEVEL: 4
 
 on:
   push:
@@ -15,7 +14,12 @@ on:
       - "**/CMakeLists.txt"
       - "**.cmake"
       - ".github/workflows/ci.yml"
+  workflow_dispatch:
 
+# avoid wasted runs
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
 
@@ -117,7 +121,6 @@ jobs:
       with:
         update: true
         install: >-
-          mingw-w64-x86_64-ninja
           mingw-w64-x86_64-gcc-fortran
 
     - name: Put MSYS2_MinGW64 on PATH
