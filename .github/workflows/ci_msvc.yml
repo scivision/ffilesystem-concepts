@@ -32,8 +32,16 @@ jobs:
     - name: Debug test
       run: ctest --test-dir build -C Debug -V
 
+    - name: Debug print on fail
+      if: failure()
+      run: ctest --test-dir build -C Debug -V --rerun-failed
+
     - name: Release build
       run: cmake --build build --config Release
 
     - name: Release test
       run: ctest --test-dir build -C Release -V
+
+    - name: Release print on fail
+      if: failure()
+      run: ctest --test-dir build -C Release -V --rerun-failed

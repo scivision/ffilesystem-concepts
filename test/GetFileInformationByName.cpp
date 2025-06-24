@@ -7,8 +7,21 @@
 #include <iostream>
 #include <string_view>
 
+#ifdef _MSC_VER
+#include <crtdbg.h>
+#endif
+
 
 int main(){
+#ifdef _MSC_VER
+  _CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_FILE);
+  _CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDERR);
+  _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
+  _CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
+  _CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_FILE);
+  _CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
+#endif
+
     std::wstring_view path = L".";
 
     FILE_STAT_BASIC_INFORMATION f;
