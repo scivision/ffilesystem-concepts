@@ -17,8 +17,9 @@ on:
 jobs:
 
   msvc:
-    runs-on: windows-latest
-    timeout-minutes: 15
+    runs-on: windows-2025
+# used windows-2025 temporarily to skip ahead to latest ABI for GetFileInformationByName()
+    timeout-minutes: 5
 
     steps:
     - uses: actions/checkout@v4

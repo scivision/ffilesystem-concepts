@@ -32,7 +32,8 @@ int main(){
 
     FILE_STAT_BASIC_INFORMATION f;
 
-    std::cout << "GetFileInformationByName for: " << narrow_path << "\n";
+    std::cout << "GetFileInformationByName for: " << narrow_path << std::endl;
+    // using std::endl to flush in case of error 139 on CI
 
     if (GetFileInformationByName(wide_path.c_str(),
                                   FileStatBasicByNameInfo,
