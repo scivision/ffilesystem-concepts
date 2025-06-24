@@ -1,5 +1,9 @@
 // Demonstrate Windows >= 24H2 API GetFileInformationByName
 // in June 2025, MinGW/MSYS2 didn't have this API yet.
+// on GitHub Actions, windows-2025 worked but windows-2022 gave error 139 in June 2025.
+//
+// * OK: windows-2025 MSVC 19.44.35209.0 Windows 10.0.26100 Build 4349
+// * Error 139 on run: windows-2022 MSVC 19.43.34808.0 Windows 10.0.20348 Build 3807
 
 #define WIN32_LEAN_AND_MEAN
 
@@ -8,20 +12,8 @@
 #include <string_view>
 #include <source_location>
 
-#ifdef _MSC_VER
-#include <crtdbg.h>
-#endif
-
 
 int main(){
-#ifdef _MSC_VER
-  _CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_FILE);
-  _CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDERR);
-  _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
-  _CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
-  _CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_FILE);
-  _CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
-#endif
 
     std::string_view narrow_path = std::source_location::current().file_name();
 
@@ -33,7 +25,6 @@ int main(){
     FILE_STAT_BASIC_INFORMATION f;
 
     std::cout << "GetFileInformationByName for: " << narrow_path << std::endl;
-    // using std::endl to flush in case of error 139 on CI
 
     if (GetFileInformationByName(wide_path.c_str(),
                                   FileStatBasicByNameInfo,
