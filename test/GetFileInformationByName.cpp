@@ -6,6 +6,7 @@
 #include <windows.h>
 #include <iostream>
 #include <string_view>
+#include <source_location>
 
 #ifdef _MSC_VER
 #include <crtdbg.h>
@@ -22,11 +23,18 @@ int main(){
   _CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
 #endif
 
-    std::wstring_view path = L".";
+    std::string_view narrow_path = std::source_location::current().file_name();
+
+    // Convert narrow string to wide string
+    int wide_size = MultiByteToWideChar(CP_UTF8, 0, narrow_path.data(), static_cast<int>(narrow_path.size()), nullptr, 0);
+    std::wstring wide_path(wide_size, L'\0');
+    MultiByteToWideChar(CP_UTF8, 0, narrow_path.data(), static_cast<int>(narrow_path.size()), wide_path.data(), wide_size);
 
     FILE_STAT_BASIC_INFORMATION f;
 
-    if (GetFileInformationByName(path.data(),
+    std::cout << "GetFileInformationByName for: " << narrow_path << "\n";
+
+    if (GetFileInformationByName(wide_path.c_str(),
                                   FileStatBasicByNameInfo,
                                   &f,
                                   sizeof(f)))
