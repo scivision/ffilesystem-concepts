@@ -60,4 +60,13 @@ foreach(d IN LISTS satest)
   add_subdirectory(test/${d})
 endforeach()
 
+if(WIN32)
+  check_symbol_exists(GetFileInformationByName "windows.h" HAVE_GetFileInfoByName)
+  if(HAVE_GetFileInfoByName)
+    add_executable(test_get_file_info_by_name test/GetFileInformationByName.cpp)
+    add_test(NAME WindowsGetFileInfoByName COMMAND test_get_file_info_by_name)
+  endif()
+
+endif()
+
 file(GENERATE OUTPUT .gitignore CONTENT "*")
