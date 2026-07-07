@@ -1,10 +1,6 @@
 include(CheckIncludeFile)
 include(CheckSymbolExists)
 
-if(CMAKE_VERSION VERSION_LESS 3.25 AND CMAKE_SYSTEM_NAME STREQUAL "Linux")
-  set(LINUX true)
-endif()
-
 if(NOT MSVC AND NOT DEFINED ffilesystem_stdcpp_version)
 
 message(CHECK_START "Checking C++ standard library version")

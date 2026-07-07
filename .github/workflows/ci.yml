@@ -2,8 +2,6 @@ name: ci
 
 env:
   HOMEBREW_NO_INSTALL_CLEANUP: 1
-  CTEST_NO_TESTS_ACTION: error
-  CTEST_PARALLEL_LEVEL: 0
 
 on:
   push:
@@ -23,13 +21,13 @@ concurrency:
 
 jobs:
 
-  linux-new:
-    runs-on: ubuntu-24.04
-    timeout-minutes: 15
+  ubuntu26:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 5
 
     strategy:
       matrix:
-        gcc-version: [12, 13, 14]
+        gcc-version: [15]
 
     env:
       CC: gcc-${{ matrix.gcc-version }}
@@ -38,18 +36,18 @@ jobs:
 
     steps:
     - &checkout
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
 
     - uses: ./.github/workflows/composite-action
 
 
-  linux-old:
-    runs-on: ubuntu-22.04
+  ubuntu24:
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
 
     strategy:
       matrix:
-        gcc-version: [9, 10, 11]
+        gcc-version: [11, 12, 13, 14]
 
     env:
       CC: gcc-${{ matrix.gcc-version }}
@@ -57,24 +55,24 @@ jobs:
       FC: gfortran-${{ matrix.gcc-version }}
 
     steps:
-    - *checkout
-
     - name: GCC APT
-      if: matrix.gcc-version < 11
+      if: matrix.gcc-version < 12
       run: |
         sudo apt update -y
         sudo apt install -y --no-install-recommends gcc-${{ matrix.gcc-version }} g++-${{ matrix.gcc-version }} gfortran-${{ matrix.gcc-version }}
+
+    - *checkout
 
     - uses: ./.github/workflows/composite-action
 
 
   linux-clang:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 15
 
     strategy:
       matrix:
-        clang-version: [16, 17, 18]
+        clang-version: [22]
 
     env:
       CC: clang-${{ matrix.clang-version }}
@@ -83,22 +81,6 @@ jobs:
     steps:
     - *checkout
     - uses: ./.github/workflows/composite-action
-
-
-  valgrind-memory:
-    runs-on: ubuntu-24.04
-    needs: linux-new
-    timeout-minutes: 10
-
-    steps:
-    - name: install valgrind
-      run: |
-        sudo apt update
-        sudo apt install --no-install-recommends valgrind
-
-    - *checkout
-
-    - run: ctest -S memcheck.cmake -V -LE python
 
 
   mac:

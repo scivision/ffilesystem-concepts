@@ -1,3 +1,6 @@
+name: CMake Workflow
+description: build and test with CMake workflow
+
 runs:
 
   using: "composite"

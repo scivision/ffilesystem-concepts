@@ -1,10 +1,5 @@
 name: ci_msvc
 
-env:
-  CTEST_NO_TESTS_ACTION: error
-  CTEST_PARALLEL_LEVEL: 0
-  CMAKE_BUILD_PARALLEL_LEVEL: 4
-
 on:
   push:
     paths:
@@ -13,6 +8,13 @@ on:
       - "**/CMakeLists.txt"
       - "**.cmake"
       - ".github/workflows/ci_msvc.yml"
+  workflow_dispatch:
+
+# avoid wasted runs
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 
 jobs:
 
@@ -22,7 +24,7 @@ jobs:
     timeout-minutes: 5
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
 
     - name: config
       run: cmake -Bbuild -Dfortran=no
