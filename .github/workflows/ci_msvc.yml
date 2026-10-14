@@ -19,12 +19,11 @@ concurrency:
 jobs:
 
   msvc:
-    runs-on: windows-2025
-# used windows-2025 temporarily to skip ahead to latest ABI for GetFileInformationByName()
+    runs-on: windows-latest
     timeout-minutes: 5
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
 
     - name: config
       run: cmake -Bbuild -Dfortran=no
