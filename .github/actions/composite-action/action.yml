@@ -13,4 +13,4 @@ runs:
 
   - name: Release workflow
     shell: bash
-    run: cmake --workflow release
+    run: cmake --workflow default

@@ -108,4 +108,4 @@ jobs:
     steps:
     - *checkout
 
-    - uses: ./.github/actions/composite-action
+    - run: cmake --workflow default
